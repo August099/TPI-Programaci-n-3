@@ -1,6 +1,6 @@
 import {Button,Card} from 'react-bootstrap';
 
-function BasicExample() {
+const item = () => {
   return (
     <Card style={{ width: '18rem' }}>
       <Card.Img variant="top" src="holder.js/100px180" />
@@ -16,4 +16,4 @@ function BasicExample() {
   );
 }
 
-export default BasicExample;
+export default item;

@@ -1,9 +1,15 @@
 import {Button, Form} from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 
-function BasicExample() {
+
+const Login = ({onHandleLogin}) => {
 
   const navigate = useNavigate();
+  const handlelogin = (event) =>{
+    event.preventDefault()
+    onHandleLogin()
+    navigate("/Store")
+  }
 
   return (
     <Form>
@@ -21,13 +27,11 @@ function BasicExample() {
       <Form.Group className="mb-3" controlId="formBasicCheckbox">
         <Form.Check type="checkbox" label="Acepto los términos y condiciones" />
       </Form.Group>
-      <Button variant="primary" type="submit" onClick={() => {
-        preventdefault();
-        navigate('/Store')}}>
+      <Button variant="primary" type="submit" onClick={handlelogin}>
         Enviar
       </Button>
     </Form>
   );
 }
 
-export default BasicExample;
+export default Login;
