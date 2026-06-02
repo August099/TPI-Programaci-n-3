@@ -28,9 +28,11 @@ function App() {
 
 
       <Routes>
+        <Route path="/" element={<Navigate to="/card"/>} />
         <Route path="/login" element={<Login onHandleLogin={handleLogin}/>} />
+        <Route path="/card" element={<Card />}/>
         <Route element={<Protected IsSignedIn={IsLoggedIn}/>}>
-          <Route path="/Store" element={<Card />}/>
+      
         </Route>
 
       </Routes>
