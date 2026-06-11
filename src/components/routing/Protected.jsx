@@ -6,7 +6,7 @@ import { useContext } from "react";
 const Protected = ({IsSignedIn}) => {
 //   const { token } = useContext(AutheticationContext);
   if (!IsSignedIn) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="login" replace />;
   }
   return <Outlet />;
 };

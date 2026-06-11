@@ -1,5 +1,6 @@
-import {Button, Form} from 'react-bootstrap';
+import {Button, Col, Row, Form, Card} from 'react-bootstrap';
 import { useNavigate } from 'react-router';
+import AuthContainer from "../AuthContainer/AuthContainer";
 
 
 const Login = ({onHandleLogin}) => {
@@ -12,25 +13,45 @@ const Login = ({onHandleLogin}) => {
   }
 
   return (
-    <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-        </Form.Text>
-      </Form.Group>
+    <>
+      <Card
+      className="mt-4 mx-auto p-3 px-5 shadow"
+      style={{ maxWidth: "400px" }}
+      >
+        <Card.Body>
+          <Row className="mb-2">
+            <h5>Binevenido a la Ferreteria</h5>
+          </Row>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Contraseña</Form.Label>
-        <Form.Control type="password" placeholder="Contraseña" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Acepto los términos y condiciones" />
-      </Form.Group>
-      <Button variant="primary" type="submit" onClick={handlelogin}>
-        Enviar
-      </Button>
-    </Form>
+          <Form>
+            <Form.Group className="mb-4" controlId="formGridEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" />
+            </Form.Group>
+
+            <Form.Group className="mb-4" controlId="formGridPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" />
+            </Form.Group>
+
+            <Row>
+              <Col className='d-flex justify-content-center'>
+                <Button className='px-5' type="submit">
+                  Iniciar sesion
+                </Button>
+              </Col>
+            </Row>
+            <Row className="mt-4">
+              <Col className='d-flex flex-column justify-content-end'>
+                <p className="text-center fw-bold">¿Aun no tienes cuenta?</p>
+                <Button variant='secondary' className='px-5 align-self-center' onClick={() => navigate("/register")}>Registrate</Button>
+              </Col>
+            </Row>
+          
+          </Form>
+        </Card.Body>
+      </Card>
+    </>
   );
 }
 
