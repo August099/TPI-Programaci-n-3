@@ -7,6 +7,7 @@ import Login from './components/Auth/login/login.jsx'
 import Contacto from './components/contactos/Contacto/Contacto.jsx'
 import Protected from './components/routing/Protected.jsx';
 import { useState } from 'react';
+import Home from './components/store/home/Home.jsx';
 
 
 function App() {
@@ -26,11 +27,12 @@ function App() {
 
      <BrowserRouter>
 
-
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/card"/>} />
+        <Route path="/" element={<Navigate to="/Home"/>} />
         <Route path="/login" element={<Login onHandleLogin={handleLogin}/>} />
         <Route path="/card" element={<Card />}/>
+        <Route path="/home" element={<Home />}/>
         <Route element={<Protected IsSignedIn={IsLoggedIn}/>}>
       
         </Route>
