@@ -6,7 +6,9 @@ import Card from './components/store/card/card.jsx'
 import Login from './components/Auth/login/login.jsx'
 import Contacto from './components/contactos/Contacto/Contacto.jsx'
 import Protected from './components/routing/Protected.jsx';
+import CartPage from './components/cart/Cart.jsx';
 import { useState } from 'react';
+
 
 
 function App() {
@@ -28,9 +30,10 @@ function App() {
 
 
       <Routes>
+        <Route path="/" element={<Navigate to = "/Store"/>}></Route>
         <Route path="/login" element={<Login onHandleLogin={handleLogin}/>} />
+        <Route path="/Store" element={<CartPage />}/>
         <Route element={<Protected IsSignedIn={IsLoggedIn}/>}>
-          <Route path="/Store" element={<Card />}/>
         </Route>
 
       </Routes>
