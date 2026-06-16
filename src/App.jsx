@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import Navbar from './components/navbar/navbar.jsx'
-import Carrusel from './components/store/carrusel/carrusel.jsx'
-import Card from './components/store/card/card.jsx'
 import Login from './components/Auth/login/login.jsx'
 import Register from './components/Auth/register/Register.jsx'
 import Contacto from './components/contactos/Contacto/Contacto.jsx'
+import CartPage from './components/cart/Cart.jsx';
+import Card from './components/store/card/card.jsx'
 import Protected from './components/routing/Protected.jsx';
 import { ToastContainer } from "react-toastify";
-import CartPage from './components/cart/Cart.jsx';
+
 import { useState } from 'react';
 
 import './App.css'
