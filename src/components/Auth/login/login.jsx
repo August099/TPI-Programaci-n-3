@@ -1,36 +1,113 @@
-import {Button, Form} from 'react-bootstrap';
+import {Button, Col, Row, Form, Card} from 'react-bootstrap';
 import { useNavigate } from 'react-router';
+import AuthContainer from "../AuthContainer/AuthContainer";
 
+import { useRef, useState, useContext } from "react";
+import { errorToast } from "../../ui/notifications/notifications";
+import { validateLoginUser } from "../auth.services";
+import { loginUser } from "./Login.services";
 
-const Login = ({onHandleLogin}) => {
+import { AutheticationContext } from "../../services/auth/auth.context.jsx";
+//import { useTranslate } from "../../services/translation/useTranslate";
+
+const Login = () => {
 
   const navigate = useNavigate();
-  const handlelogin = (event) =>{
-    event.preventDefault()
-    onHandleLogin()
-    navigate("/Store")
-  }
+  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState(null);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState(null);
+  
+  const { handleUserLogin } = useContext(AutheticationContext);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+    setEmailErrorMessage(null)
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+    setPasswordErrorMessage(null)
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const {emailMessage, passwordMessage} = validateLoginUser({email, password})
+    
+    if (emailMessage || passwordMessage) {
+      setEmailErrorMessage(emailMessage)
+      setPasswordErrorMessage(passwordMessage)
+      return
+    }
+    loginUser(
+      email,
+      password,
+      (token) => {
+        handleUserLogin(token);
+        navigate("/library");
+      },
+      (err) => {
+        errorToast(err.message);
+      }
+    );
+  };
 
   return (
-    <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-        </Form.Text>
-      </Form.Group>
+    <>
+      <AuthContainer>
+          <Row className="text-center fw-bold mb-2">
+            <h4>Ingrese su cuenta</h4>
+          </Row>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Contraseña</Form.Label>
-        <Form.Control type="password" placeholder="Contraseña" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Acepto los términos y condiciones" />
-      </Form.Group>
-      <Button variant="primary" type="submit" onClick={handlelogin}>
-        Enviar
-      </Button>
-    </Form>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-4" controlId="formGridEmail">
+              <Form.Label className='fw-bold'>Email</Form.Label>
+              <Form.Control
+              type="text"
+              autoComplete="email"
+              inputMode="email"
+              placeholder="Enter email"
+              onChange={handleEmailChange}
+              value={email}
+              ref={emailRef}
+              className={emailErrorMessage && "border border-danger border-3"}
+              />
+              {emailErrorMessage && <Form.Label>{emailErrorMessage}</Form.Label>}
+            </Form.Group>
+
+            <Form.Group className="mb-4" controlId="formGridPassword">
+              <Form.Label className='fw-bold'>Password</Form.Label>
+              <Form.Control
+              type="password"
+              placeholder="Password"
+              onChange={handlePasswordChange}
+              value={password}
+              ref={passwordRef}
+              className={passwordErrorMessage && "border border-danger border-3"}
+              />
+              {passwordErrorMessage && <Form.Label>{passwordErrorMessage}</Form.Label>}
+            </Form.Group>
+
+            <Row>
+              <Col className='d-flex justify-content-center'>
+                <Button className='fw-bold px-5' type="submit" style={{backgroundColor: "var(--azul)"}}>
+                  Iniciar sesion
+                </Button>
+              </Col>
+            </Row>
+            <Row className="mt-4">
+              <Col className='d-flex flex-column justify-content-end'>
+                <p className="text-center fw-bold">¿Aun no tienes cuenta?</p>
+                <Button className='border-0 px-5 align-self-center' style={{backgroundColor: "#222725"}} onClick={() => navigate("/register")}>Registrate</Button>
+              </Col>
+            </Row>
+          
+          </Form>
+      </AuthContainer>
+    </>
   );
 }
 
