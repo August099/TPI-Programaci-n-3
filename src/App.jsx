@@ -30,8 +30,11 @@ function App() {
       <ToastContainer />
 
       <Routes>
-        <Route path="/login" element={<Login onHandleLogin={handleLogin}/>} />
-        <Route element={<Protected IsSignedIn={IsLoggedIn}/>}>
+        <Route path="/" element={<Navigate to="login" />} />
+        <Route path="login" element={<Login/>} />
+        <Route path="register" element={<Register/>} />
+        
+        <Route element={<Protected/>}>
           <Route path="/Store" element={<Card />}/>
         </Route>
 
