@@ -9,9 +9,9 @@ import Protected from './components/routing/Protected.jsx';
 import { ToastContainer } from "react-toastify";
 import CartPage from './components/cart/Cart.jsx';
 import { useState } from 'react';
-import Home from './components/store/home/Home.jsx';
 
 import './App.css'
+import Home from './components/store/home/Home.jsx';
 
 
 function App() {
@@ -28,7 +28,6 @@ function App() {
   <div className='d-flex justify-content-center align-items-center vw-100 vh-100 p-3 ' style={{background: "var(--primary)"}}>
 
      <BrowserRouter>
-<<<<<<< HEAD
       <ToastContainer />
 
       <Routes>
@@ -38,17 +37,6 @@ function App() {
         
         <Route element={<Protected/>}>
           <Route path="/Store" element={<Card />}/>
-=======
-
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Navigate to="/Home"/>} />
-        <Route path="/login" element={<Login onHandleLogin={handleLogin}/>} />
-        <Route path="/card" element={<Card />}/>
-        <Route path="/home" element={<Home />}/>
-        <Route element={<Protected IsSignedIn={IsLoggedIn}/>}>
-      
->>>>>>> items
         </Route>
 
       </Routes>
