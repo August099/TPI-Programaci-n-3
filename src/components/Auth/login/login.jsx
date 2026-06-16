@@ -2,7 +2,7 @@ import {Button, Col, Row, Form, Card} from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import AuthContainer from "../AuthContainer/AuthContainer";
 
-import { useRef, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { errorToast } from "../../ui/notifications/notifications";
 import { validateLoginUser } from "../auth.services";
 import { loginUser } from "./Login.services";
@@ -16,12 +16,11 @@ const Login = () => {
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
   const [emailErrorMessage, setEmailErrorMessage] = useState(null);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState(null);
   
   const { handleUserLogin } = useContext(AutheticationContext);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -72,7 +71,6 @@ const Login = () => {
               placeholder="Enter email"
               onChange={handleEmailChange}
               value={email}
-              ref={emailRef}
               className={emailErrorMessage && "border border-danger border-3"}
               />
               {emailErrorMessage && <Form.Label>{emailErrorMessage}</Form.Label>}
@@ -85,7 +83,6 @@ const Login = () => {
               placeholder="Password"
               onChange={handlePasswordChange}
               value={password}
-              ref={passwordRef}
               className={passwordErrorMessage && "border border-danger border-3"}
               />
               {passwordErrorMessage && <Form.Label>{passwordErrorMessage}</Form.Label>}

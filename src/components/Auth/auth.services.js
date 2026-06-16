@@ -35,36 +35,32 @@ export const validateLoginUser = (body) => {
   const { email, password } = body;
 
   if (!email || !validateEmail(email)) {
-    errors.emailMessage = "Email invalido";
+    errors.emailMessage = "Email invalido.";
   }
   
   if (!password || !validatePassword(password, 7, null, true, true)) {
-    errors.passwordMessage = "Contraseña invalida";
+    errors.passwordMessage = "Contraseña invalida.";
   }
 
   return errors;
 };
 
 export const validateRegisterUser = (body) => {
-  const { userName, email, password } = body;
+  const { name, email, password, repeatPassword } = body;
+  const errors = {};
 
-  const result = {
-    error: false,
-    message: "",
-  };
-
-  if (!userName || !validateString(userName, 4, 20)) {
-    return {
-      error: true,
-      message: "Username invalido",
-    };
-  } else if (!email || !validateEmail(email)) {
-    result.error = true;
-    result.message = "Email invalido";
-  } else if (!password || !validatePassword(password, 7, null, true, true)) {
-    result.error = true;
-    result.message = "Contraseña invalida";
+  if (!name || !validateString(name, 4, 20)) {
+    errors.nameMessage = "Nombre invalido. Debe contener entre 4 y 20 caracteres."
+  }
+  if (!email || !validateEmail(email)) {
+    errors.emailMessage = "Email invalido."
+  }
+  if (!password || !validatePassword(password, 7, null, true, true)) {
+    errors.passwordMessage = "Contraseña invalida. Debe contener al menos 7 caracteres, una mayuscula y un numero."
+  }
+  if (!repeatPassword || repeatPassword != password) {
+    errors.repeatPasswordMessage = "Asegure que las contraseñas sean iguales"
   }
 
-  return result;
+  return errors;
 };

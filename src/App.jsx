@@ -36,7 +36,7 @@ function App() {
         <Route path="register" element={<Register/>} />
         
         <Route element={<Protected/>}>
-          <Route path="/Store" element={<Card />}/>
+          <Route path="/card" element={<Card />}/>
         </Route>
 
       </Routes>

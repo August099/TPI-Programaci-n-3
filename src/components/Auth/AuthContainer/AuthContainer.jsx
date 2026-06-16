@@ -4,7 +4,7 @@ const AuthContainer = ({ children }) => {
   return (
     <Card
       className="p-3 px-5 shadow"
-      style={{ maxWidth: "500px", backgroundColor: "var(--secondary)", color: "var(--white)" }}
+      style={{ minWidth: "500px", maxWidth: "500px", maxHeight: "90%", backgroundColor: "var(--secondary)", color: "var(--white)", overflowY: "auto", scrollbarWidth: "none" }}
     >
       <Card.Body>
         {children}
