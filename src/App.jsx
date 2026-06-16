@@ -7,7 +7,9 @@ import Register from './components/Auth/register/Register.jsx'
 import Contacto from './components/contactos/Contacto/Contacto.jsx'
 import Protected from './components/routing/Protected.jsx';
 import { ToastContainer } from "react-toastify";
+import CartPage from './components/cart/Cart.jsx';
 import { useState } from 'react';
+
 import './App.css'
 
 
@@ -28,11 +30,8 @@ function App() {
       <ToastContainer />
 
       <Routes>
-        <Route path="/" element={<Navigate to="login" />} />
-        <Route path="login" element={<Login/>} />
-        <Route path="register" element={<Register/>} />
-        
-        <Route element={<Protected/>}>
+        <Route path="/login" element={<Login onHandleLogin={handleLogin}/>} />
+        <Route element={<Protected IsSignedIn={IsLoggedIn}/>}>
           <Route path="/Store" element={<Card />}/>
         </Route>
 
