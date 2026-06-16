@@ -26,7 +26,7 @@ function App() {
 
      <BrowserRouter>
 
-      // prueba
+
       <Routes>
         <Route path="/login" element={<Login onHandleLogin={handleLogin}/>} />
         <Route element={<Protected IsSignedIn={IsLoggedIn}/>}>
