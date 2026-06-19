@@ -1,15 +1,31 @@
+import "./navbar.css"
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import ItemSearch from "../store/itemSearch/itemSearch";
+import ConfigButton from "./configButton";
 
-function ColorSchemesExample() {
+function StoreNavbar({onLogout}) {
   const navigate = useNavigate();
+
+  /*const [itemSearch, setItemSearch] = useState("");
+
+  const handleItemSearch = ({value, search}) => {
+    setItemSearch(value);
+    
+    if (search) {
+      navigate("/store/products")
+    }
+    
+  };*/
 
   return (
     <Navbar
+      className="w-100"
       expand="lg"
       style={{
         backgroundColor: "#222725",
@@ -18,11 +34,9 @@ function ColorSchemesExample() {
       <Container>
 
         <Navbar.Brand
-          onClick={() => navigate("/home")}
           style={{
-            color: "#06D6A0",
+            color: "var(--green)",
             fontWeight: "bold",
-            cursor: "pointer",
             fontSize: "1.5rem",
           }}
         >
@@ -41,7 +55,7 @@ function ColorSchemesExample() {
           <Nav className="mx-auto">
 
             <Nav.Link
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/store")}
               style={{
                 color: "#FEE9E1",
                 cursor: "pointer",
@@ -51,7 +65,7 @@ function ColorSchemesExample() {
             </Nav.Link>
 
             <Nav.Link
-              onClick={() => navigate("/productos")}
+              onClick={() => navigate("/store/products")}
               style={{
                 color: "#FEE9E1",
                 cursor: "pointer",
@@ -61,7 +75,7 @@ function ColorSchemesExample() {
             </Nav.Link>
 
             <Nav.Link
-              onClick={() => navigate("/carrito")}
+              onClick={() => navigate("/store/cart")}
               style={{
                 color: "#FEE9E1",
                 cursor: "pointer",
@@ -71,7 +85,7 @@ function ColorSchemesExample() {
             </Nav.Link>
 
             <Nav.Link
-              onClick={() => navigate("/contacto")}
+              onClick={() => navigate("/store/items-admin")}
               style={{
                 color: "#FEE9E1",
                 cursor: "pointer",
@@ -82,18 +96,12 @@ function ColorSchemesExample() {
 
           </Nav>
 
+          {/*<Nav>
+            <ItemSearch onFindItem={handleItemSearch} value={itemSearch}/>
+          </Nav>*/}
+
           <Nav>
-
-            <Nav.Link
-              onClick={() => navigate("/config")}
-              style={{
-                color: "#5BC3EB",
-                cursor: "pointer",
-              }}
-            >
-              <i className="bi bi-gear-fill fs-4"></i>
-            </Nav.Link>
-
+            <ConfigButton onLogout={onLogout}/>
           </Nav>
 
         </Navbar.Collapse>
@@ -103,4 +111,4 @@ function ColorSchemesExample() {
   );
 }
 
-export default ColorSchemesExample;
+export default StoreNavbar;

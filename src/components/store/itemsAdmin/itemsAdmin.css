@@ -1,0 +1,89 @@
+.tabla-items th,
+.tabla-items td {
+    text-align: center;
+    vertical-align: middle;
+    height: 70px;
+    padding: 0;
+}
+
+.descripcion-clamp, .image-clamp, .title-clamp{
+    
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.descripcion-clamp {
+    padding-inline: 5px;
+    text-align: start;
+    max-width: 100%;
+}
+
+.image-clamp {
+    padding-inline: 5px;
+    text-align: start;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+.title-clamp {
+    margin: auto;
+    max-width: 100%;
+}
+
+.col-id {
+    width: 5%;
+    max-width: 5%;
+    min-width: 5%;
+}
+
+.col-title {
+    width: 11%;
+    max-width: 11%;
+    min-width: 11%;
+}
+
+.col-description {
+    width: 25%;
+    max-width: 25%;
+    min-width: 25%;
+}
+
+.col-price {
+    width: 10%;
+    max-width: 10%;
+    min-width: 10%;
+}
+
+.col-discount {
+    width: 7%;
+    max-width: 7%;
+    min-width: 7%;
+}
+
+.col-image {
+    width: 25%;
+    max-width: 25%;
+    min-width: 25%;
+}
+
+.col-available {
+    width: 7%;
+    max-width: 7%;
+    min-width: 7%;
+}
+
+.col-edit {
+    width: 5%;
+    max-width: 5%;
+    min-width: 5%;
+}
+
+.col-delete {
+    width: 5%;
+    max-width: 5%;
+    min-width: 5%;
+}

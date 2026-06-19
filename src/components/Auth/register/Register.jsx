@@ -39,18 +39,31 @@ const Register = () => {
     setRepeatPasswordErrorMessage(null)
   };
 
+  const hasErrors = (errors) => {
+    const {nameError, emailError, passwordError, repeatPasswordError, userError} = errors
+
+    if (nameError || emailError || passwordError || repeatPasswordError) {
+      setNameErrorMessage(nameError)
+      setEmailErrorMessage(emailError)
+      setPasswordErrorMessage(passwordError)
+      setRepeatPasswordErrorMessage(repeatPasswordError)
+      return true
+    }
+
+    if (userError) {
+      errorToast(userError)
+      return true
+    }
+
+    return false
+  }
+
   const handleRegister = (event) => {
     event.preventDefault();
 
-    const {nameMessage, emailMessage, passwordMessage, repeatPasswordMessage} = validateRegisterUser({name, email, password, repeatPassword})
+    const result = validateRegisterUser({name, email, password, repeatPassword})
         
-    if (nameMessage || emailMessage || passwordMessage || repeatPasswordMessage) {
-      setNameErrorMessage(nameMessage)
-      setEmailErrorMessage(emailMessage)
-      setPasswordErrorMessage(passwordMessage)
-      setRepeatPasswordErrorMessage(repeatPasswordMessage)
-      return
-    }
+    if (hasErrors(result)) return
 
     registerUser(
       name,
@@ -60,10 +73,10 @@ const Register = () => {
       () => {
         successToast("Usuario creado exitosamente");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/store");
         }, 1500);
       },
-      (err) => console.log(err)
+      hasErrors
     )
   };
 
@@ -127,7 +140,7 @@ const Register = () => {
 
           <Row>
             <Col className='d-flex justify-content-center'>
-              <Button className='fw-bold px-5 mt-3' type='submit' style={{backgroundColor: "var(--azul)"}} onClick={handleRegister}>Registrarse</Button>
+              <Button className='fw-bold px-5 mt-3' type='submit' style={{backgroundColor: "var(--blue)"}} onClick={handleRegister}>Registrarse</Button>
             </Col>
           </Row>
           <Row className="mt-4">

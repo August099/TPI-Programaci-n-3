@@ -6,12 +6,13 @@ export const registerUser = (name, email, password, repeatPassword, onSuccess, o
         method: "POST",
         body: JSON.stringify({ name, email, password, repeatPassword }),
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error("Error en la respuesta del servidor");
-            }
-            return res.json();
-        })
-        .then(onSuccess)
-        .catch(onError);
+    .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+            throw data.errors;
+        }
+        return data;
+    })
+    .then(onSuccess)
+    .catch(onError);
 }

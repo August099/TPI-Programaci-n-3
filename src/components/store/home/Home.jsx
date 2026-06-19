@@ -1,54 +1,10 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
-import Item from "../card/card";
+import CardItem from "../cardItem/cardItem.jsx";
 
-function Home() {
-  const productos = [
-    {
-      id: 1,
-      nombre: "Taladro Percutor",
-      descripcion: "Taladro de alta potencia para trabajos profesionales.",
-      precio: "$89.999",
-      imagen:
-        "https://images.unsplash.com/photo-1504148455328-c376907d081c",
-    },
-    {
-      id: 2,
-      nombre: "Amoladora Angular",
-      descripcion: "Ideal para cortar y desbastar diferentes materiales.",
-      precio: "$74.999",
-      imagen:
-        "https://images.unsplash.com/photo-1581147036324-c1c6f25d8b77",
-    },
-    {
-      id: 3,
-      nombre: "Caja de Herramientas",
-      descripcion: "Amplio espacio para organizar todas tus herramientas.",
-      precio: "$29.999",
-      imagen:
-        "https://images.unsplash.com/photo-1581578731548-c64695cc6952",
-    },
-    {
-      id: 4,
-      nombre: "Set Destornilladores",
-      descripcion: "Juego completo para trabajos de precisión.",
-      precio: "$14.999",
-      imagen:
-        "https://images.unsplash.com/photo-1530124566582-a618bc2615dc",
-    },
-  ];
-
-  const categorias = [
-    "Herramientas",
-    "Electricidad",
-    "Plomería",
-    "Pinturería",
-    "Construcción",
-    "Jardinería",
-  ];
+const Home = ({items, categorias}) => {
 
   return (
-    <div style={{ backgroundColor: "#FEE9E1" }}>
-      {/* HERO */}
+    <div style={{height: "100vh", width: "100%", overflowY: "auto", scrollbarWidth: "none" }}>
       <section
         style={{
           backgroundColor: "#222725",
@@ -84,7 +40,7 @@ function Home() {
 
             <Col md={6}>
               <img
-                src="https://images.unsplash.com/photo-1581147036324-c1c6f25d8b77"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJh_K3ABWKn5F44bPHzYYJYJy04lrBzm7t_g&s"
                 alt="Ferretería"
                 className="img-fluid rounded shadow"
               />
@@ -93,7 +49,6 @@ function Home() {
         </Container>
       </section>
 
-      {/* CATEGORIAS */}
       <Container className="py-5">
         <h2
           className="text-center mb-5 fw-bold"
@@ -121,7 +76,6 @@ function Home() {
         </Row>
       </Container>
 
-      {/* PRODUCTOS */}
       <Container className="py-5">
         <h2
           className="text-center mb-5 fw-bold"
@@ -131,20 +85,23 @@ function Home() {
         </h2>
 
         <Row className="justify-content-center g-4">
-          {productos.map((producto) => (
-            <Col key={producto.id} xs="auto">
-              <Item
-                nombre={producto.nombre}
-                descripcion={producto.descripcion}
-                precio={producto.precio}
-                imagen={producto.imagen}
+          {items.map((item) => (
+            <Col key={item.id} xs="auto">
+              <CardItem
+                id={item.id}
+                key={item.id}
+                title={item.title}
+                description={item.description}
+                price={item.price}
+                discount={item.discount}
+                imageUrl={item.imageUrl}
+                available={item.available}
               />
             </Col>
           ))}
         </Row>
       </Container>
 
-      {/* BENEFICIOS */}
       <section
         style={{
           backgroundColor: "#B09E99",
@@ -174,7 +131,6 @@ function Home() {
         </Container>
       </section>
 
-      {/* OFERTA */}
       <section
         style={{
           backgroundColor: "#222725",

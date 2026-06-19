@@ -7,11 +7,11 @@ export const loginUser = (email, password, onSuccess, onError) => {
     body: JSON.stringify({ email, password }),
   })
     .then(async (res) => {
+      const data = await res.json();
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || "Hubo un error en el servidor");
+        throw data.errors;
       }
-      return res.json();
+      return data;
     })
     .then((data) => onSuccess(data))
     .catch((err) => onError(err));

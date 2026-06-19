@@ -32,25 +32,37 @@ const Login = () => {
     setPasswordErrorMessage(null)
   };
 
+  const hasErrors = (errors) => {
+    const {emailError, passwordError, userError} = errors
+
+    if (emailError || passwordError) {
+      setEmailErrorMessage(emailError)
+      setPasswordErrorMessage(passwordError)
+      return true
+    }
+
+    if (userError) {
+      errorToast(userError)
+      return true
+    }
+
+    return false
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const {emailMessage, passwordMessage} = validateLoginUser({email, password})
+    const result = validateLoginUser({email, password})
     
-    if (emailMessage || passwordMessage) {
-      setEmailErrorMessage(emailMessage)
-      setPasswordErrorMessage(passwordMessage)
-      return
-    }
+    if (hasErrors(result)) return
+
     loginUser(
       email,
       password,
       (token) => {
         handleUserLogin(token);
-        navigate("/library");
+        navigate("/store");
       },
-      (err) => {
-        errorToast(err.message);
-      }
+      hasErrors
     );
   };
 
@@ -90,7 +102,7 @@ const Login = () => {
 
             <Row>
               <Col className='d-flex justify-content-center'>
-                <Button className='fw-bold px-5' type="submit" style={{backgroundColor: "var(--azul)"}}>
+                <Button className='fw-bold px-5' type="submit" style={{backgroundColor: "var(--blue)"}}>
                   Iniciar sesion
                 </Button>
               </Col>

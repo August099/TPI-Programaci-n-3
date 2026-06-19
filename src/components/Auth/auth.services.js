@@ -35,11 +35,11 @@ export const validateLoginUser = (body) => {
   const { email, password } = body;
 
   if (!email || !validateEmail(email)) {
-    errors.emailMessage = "Email invalido.";
+    errors.emailError = "Email invalido.";
   }
   
   if (!password || !validatePassword(password, 7, null, true, true)) {
-    errors.passwordMessage = "Contraseña invalida.";
+    errors.passwordError = "Contraseña invalida.";
   }
 
   return errors;
@@ -50,16 +50,16 @@ export const validateRegisterUser = (body) => {
   const errors = {};
 
   if (!name || !validateString(name, 4, 20)) {
-    errors.nameMessage = "Nombre invalido. Debe contener entre 4 y 20 caracteres."
+    errors.nameError = "Nombre invalido. Debe contener entre 4 y 20 caracteres."
   }
   if (!email || !validateEmail(email)) {
-    errors.emailMessage = "Email invalido."
+    errors.emailError = "Email invalido."
   }
   if (!password || !validatePassword(password, 7, null, true, true)) {
-    errors.passwordMessage = "Contraseña invalida. Debe contener al menos 7 caracteres, una mayuscula y un numero."
+    errors.passwordError = "Contraseña invalida. Debe contener al menos 7 caracteres, una mayuscula y un numero."
   }
   if (!repeatPassword || repeatPassword != password) {
-    errors.repeatPasswordMessage = "Asegure que las contraseñas sean iguales"
+    errors.repeatPasswordError = "Asegure que las contraseñas sean iguales"
   }
 
   return errors;

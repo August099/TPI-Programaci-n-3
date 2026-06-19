@@ -1,6 +1,6 @@
 import { Button, Card } from "react-bootstrap";
 
-const Item = ({ nombre, descripcion, imagen, precio }) => {
+const CardItem = ({ id, title, description, price, discount, imageUrl, available }) => {
   return (
     <Card
       style={{
@@ -17,18 +17,18 @@ const Item = ({ nombre, descripcion, imagen, precio }) => {
           padding: "5px",
           borderRadius: "10px",
           height: "220px",
-          objectFit: "cover",
+          objectFit: "fill",
         }}
         variant="top"
-        src={imagen}
+        src={imageUrl}
       />
 
       <Card.Body className="d-flex flex-column">
-        <Card.Title>{nombre}</Card.Title>
+        <Card.Title>{title}</Card.Title>
 
-        <Card.Text>{descripcion}</Card.Text>
+        <Card.Text>{description}</Card.Text>
 
-        <h5 className="fw-bold mb-3">{precio}</h5>
+        {discount ? <h5 className="fw-bold mb-3"><span style={{textDecoration: "line-through 2px", color: "GrayText", fontSize: "16px"}}>{price}</span> {price * (1 - discount)}</h5> : <h5 className="fw-bold mb-3">{price}</h5>}
 
         <Button
           style={{
@@ -46,4 +46,4 @@ const Item = ({ nombre, descripcion, imagen, precio }) => {
   );
 };
 
-export default Item;
+export default CardItem;
