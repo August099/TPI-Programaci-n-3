@@ -1,7 +1,7 @@
 import { Button, Form, Modal, InputGroup } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
-const EditItem = ({ item, show, onClose, onConfirm}) => {
+const SetRol = ({ item, show, onClose, onConfirm}) => {
 
   const [idValue, setIdValue] = useState(item?.id)
   const [titleValue, setTitleValue] = useState(item?.title)
@@ -118,4 +118,4 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
   );
 }
 
-export default EditItem;
+export default SetRol;

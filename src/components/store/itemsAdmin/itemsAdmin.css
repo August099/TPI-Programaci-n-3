@@ -6,7 +6,7 @@
     padding: 0;
 }
 
-.descripcion-clamp, .image-clamp, .title-clamp{
+.description-clamp, .image-clamp, .title-clamp{
     
     display: -webkit-box;
     -webkit-line-clamp: 2;

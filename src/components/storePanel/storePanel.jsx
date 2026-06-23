@@ -23,6 +23,7 @@ const StorePanel = () => {
       description: "Martillo de acero inoxidble ultra resistente",
       price: 5000,
       discount: 0,
+      category: "Electricidad",
       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDiNu46oEGDXOaK8OeDdJa4PdxAdvBLP_3wg&s",
       available: true
     },
@@ -32,6 +33,7 @@ const StorePanel = () => {
       description: "Pinzas de acero inoxidble ultra resistente",
       price: 3000,
       discount: 0.3,
+      category: "Plomeria",
       imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
       available: true
     },
@@ -41,6 +43,7 @@ const StorePanel = () => {
       description: "texto corto",
       price: 1500,
       discount: 0,
+      category: "Mecanica",
       imageUrl: "https://www.perrenycia.com.ar/2892-thickbox_default/clavos-comunes-punta-paris-de-2-bolsa-x-1-kg.jpg",
       available: true
     },
@@ -50,6 +53,7 @@ const StorePanel = () => {
       description: "Taladro con mecha de acero inoxidble ultra resistente un saludo a la grasa que seguro ve mis videos en youtube, yo los sigo desde hace muchos años",
       price: 15000,
       discount: 0,
+      category: "Construccion",
       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJh_K3ABWKn5F44bPHzYYJYJy04lrBzm7t_g&s",
       available: true
     },
@@ -59,6 +63,7 @@ const StorePanel = () => {
       description: "Taladro con mecha de acero inoxidble ultra resistente un saludo a la grasa que seguro ve mis videos en youtube, yo los sigo desde hace muchos años",
       price: 15000,
       discount: 0,
+      category: "Construccion",
       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJh_K3ABWKn5F44bPHzYYJYJy04lrBzm7t_g&s",
       available: true
     },
@@ -68,6 +73,7 @@ const StorePanel = () => {
       description: "Taladro con mecha de acero inoxidble ultra resistente un saludo a la grasa que seguro ve mis videos en youtube, yo los sigo desde hace muchos años",
       price: 15000,
       discount: 0,
+      category: "Construccion",
       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJh_K3ABWKn5F44bPHzYYJYJy04lrBzm7t_g&s",
       available: true
     },
@@ -77,6 +83,7 @@ const StorePanel = () => {
       description: "Taladro con mecha de acero inoxidble ultra resistente un saludo a la grasa que seguro ve mis videos en youtube, yo los sigo desde hace muchos años",
       price: 15000,
       discount: 0,
+      category: "Construccion",
       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJh_K3ABWKn5F44bPHzYYJYJy04lrBzm7t_g&s",
       available: true
     },
@@ -86,6 +93,7 @@ const StorePanel = () => {
       description: "Taladro con mecha de acero inoxidble ultra resistente un saludo a la grasa que seguro ve mis videos en youtube, yo los sigo desde hace muchos años",
       price: 15000,
       discount: 0,
+      category: "Construccion",
       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJh_K3ABWKn5F44bPHzYYJYJy04lrBzm7t_g&s",
       available: true
     },
@@ -95,7 +103,148 @@ const StorePanel = () => {
       description: "Taladro con mecha de acero inoxidble ultra resistente un saludo a la grasa que seguro ve mis videos en youtube, yo los sigo desde hace muchos años",
       price: 15000,
       discount: 0,
+      category: "Construccion",
       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJh_K3ABWKn5F44bPHzYYJYJy04lrBzm7t_g&s",
+      available: true
+    },
+    {
+      id: 10,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Construccion",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 11,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Plomeria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 12,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Plomeria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 13,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Plomeria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 14,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Plomeria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 15,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Plomeria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 16,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 17,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 18,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 19,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 20,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 21,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 22,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
+      available: true
+    },
+    {
+      id: 23,
+      title: "Pinzas",
+      description: "Pinzas de acero inoxidble ultra resistente",
+      price: 3000,
+      discount: 0.3,
+      category: "Jardineria",
+      imageUrl: "https://www.lusqtoff.com.ar/truper/wp-content/uploads/2024/04/17369.jpg",
       available: true
     },
   ]

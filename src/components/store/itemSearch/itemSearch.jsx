@@ -1,9 +1,8 @@
 import { Form } from "react-bootstrap";
 
-const ItemSearch = ({ onFindItem }) => {
-
+const ItemSearch = ({ onFindItem, className = '' }) => {
   return (
-    <Form.Group controlId="searchItem">
+    <Form.Group className={className} controlId="searchItem">
       <Form.Control
         type="text"
         placeholder="Buscar producto..."

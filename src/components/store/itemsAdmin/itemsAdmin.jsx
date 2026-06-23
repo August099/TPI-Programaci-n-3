@@ -1,5 +1,5 @@
 import './itemsAdmin.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Table } from "react-bootstrap";
 import { PencilSquare, Trash } from "react-bootstrap-icons"
 import EditItem from '../../ui/modal/editItem';
@@ -9,6 +9,11 @@ const ItemsAdmin = ({items}) => {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editItem, setEditItem] = useState(null)
+
+  const handleEditItem = (item) => {
+    setEditItem(item)
+  }
 
   const handleConfirmEdit = () => {
     console.log("editado")
@@ -19,6 +24,12 @@ const ItemsAdmin = ({items}) => {
     console.log("eliminado")
     setShowDeleteModal(false)
   }
+
+  useEffect(() => {
+    if (editItem) {
+      setShowEditModal(true)
+    }
+  }, [editItem])
 
   return (
     <div className="w-100 h-100 p-3" style={{overflowY: "auto", scrollbarWidth: "none"}}>
@@ -52,7 +63,7 @@ const ItemsAdmin = ({items}) => {
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td><span className="title-clamp">{item.title}</span></td>
-                <td><span className="descripcion-clamp">{item.description}</span></td>
+                <td><span className="description-clamp">{item.description}</span></td>
                 <td>${item.price}</td>
                 <td>{item.discount * 100}%</td>
                 <td><span className="image-clamp">{item.imageUrl}</span></td>
@@ -61,7 +72,7 @@ const ItemsAdmin = ({items}) => {
                   <Button 
                     className="w-100 h-100 border border-0 rounded-0"
                     style={{backgroundColor: "var(--blue)"}}
-                    onClick={() => setShowEditModal(true)}
+                    onClick={() => handleEditItem(item)}
                   >
                     <PencilSquare size={20}/>
                   </Button>
@@ -80,7 +91,7 @@ const ItemsAdmin = ({items}) => {
           }
         </tbody>
       </Table>
-      <EditItem show={showEditModal} onClose={() => {setShowEditModal(false)}} onConfirm={handleConfirmEdit}/>
+      <EditItem item={editItem} show={showEditModal} onClose={() => {setShowEditModal(false)}} onConfirm={handleConfirmEdit}/>
       <ConfirmDelete show={showDeleteModal} onClose={() => {setShowDeleteModal(false)}} onConfirm={handleConfirmDelete} />
     </div>
   );

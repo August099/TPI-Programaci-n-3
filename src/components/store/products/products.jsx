@@ -1,45 +1,164 @@
-import { Container, Row, Col } from "react-bootstrap";
-import { useState } from "react";
+import { Container, Row, Col, Pagination, DropdownButton, Dropdown} from "react-bootstrap";
+import { useState, useRef, useEffect } from "react";
 import CardItem from "../cardItem/cardItem.jsx";
 import ItemSearch from "../itemSearch/itemSearch.jsx";
+import ItemsFilter from "../itemsFilter/itemsFilter.jsx";
 
 const Products = ({items}) => {
+    const itemsPerPage = 16
 
-    const [resultItems, setResultItems] = useState(items);
+    const getPriceRange = (items) => {
+        if (!items.length) return [0,0]
+
+        const prices = items.map((item) => item.price)
+        
+        return [Math.min(...prices), Math.max(...prices)]
+    }
+
+    const [page, setPage] = useState(1)
+    const [itemsToShow, setItemsToShow] = useState(itemsPerPage)
+    const [sortBy, setSortBy] = useState("name")
+    const [priceRange, setPriceRange] = useState(getPriceRange(items))
+    const [searchItems, setSearchItems] = useState(items)
+    const [resultItems, setResultItems] = useState(items)
+    
+    const [onOffer, setOnOffer] = useState(false)
+
+    const scrollRef = useRef(null)
+
+    const pagesCount = Math.ceil(resultItems.length / itemsPerPage)
+
+    const sortResults = (itemsList, sortType) => {
+        const sorted = [...itemsList]
+        switch (sortType) {
+            case "name":
+                sorted.sort((a, b) => a.title.localeCompare(b.title))
+                break
+            case "priceAsc":
+                sorted.sort((a, b) => b.price - a.price)
+                break
+            case "priceDesc":
+                sorted.sort((a, b) => a.price - b.price)
+                break
+            case "discount":
+                sorted.sort((a, b) => b.discount - a.discount)
+                break
+        }
+
+        return sorted
+    }
+
+    const changePage = (pageNumber) => {
+        if (pageNumber < 1 || pageNumber === page || pageNumber > pagesCount) return
+        setPage(pageNumber)
+        setItemsToShow(pageNumber * itemsPerPage)
+        scrollRef.current.scrollTo({top: 0, behavior: 'smooth'})
+    }
+
+    useEffect(() => {
+        setResultItems(sortResults(searchItems, sortBy))
+        setPriceRange(getPriceRange(searchItems))
+        changePage(1)
+    }, [searchItems])
+
+    useEffect(() => {
+        setResultItems(sortResults(resultItems, sortBy))
+    }, [sortBy])
 
     const handleItemSearch = (value) => {
-        setResultItems(
+        setSearchItems(
             items.filter((item) =>
                 item.title.trim().toLowerCase().includes(value.toLowerCase()),
             )
         );
     };
 
-    return <>
-        <div className="w-100 h-100 p-4" style={{overflowY:"auto", scrollbarWidth:"none"}}>
-            <ItemSearch onFindItem={handleItemSearch}/>
+    const handleSort = (orderType) => {
+        setSortBy(orderType)
+    }
 
-            <Container className="py-5">
-                <Row className="g-4">
-                    {resultItems.length > 0 ? 
-                        (resultItems.map((item) => (
-                            <Col key={item.id} xs="auto">
-                                <CardItem
-                                    id={item.id}
-                                    key={item.id}
-                                    title={item.title}
-                                    description={item.description}
-                                    price={item.price}
-                                    discount={item.discount}
-                                    imageUrl={item.imageUrl}
-                                    available={item.available}
-                                />
-                            </Col>)))
-                    :
-                        (<h2>No se encontraron productos con ese nombre</h2>)
+    const handleSetFilters = (priceRange, onOffer, categories) => {
+        const filtered = 
+            searchItems.filter(
+                (item) => {
+                    if (
+                        item.price >= priceRange[0] &&
+                        item.price <= priceRange[1] &&
+                        (!onOffer || item.discount > 0) &&
+                        (categories.length === 0 || categories.includes(item.category))
+                    ) {
+                        return true
                     }
-                </Row>
-            </Container>
+                    return false
+                }
+            )
+        
+        setResultItems(sortResults(filtered, sortBy))
+        changePage(1)
+    }
+
+    const handleChangePage = (pageNumber) => {
+        changePage(pageNumber)
+    }
+
+    return <>
+        <div ref={scrollRef} className="w-100 h-100 p-4" style={{overflowY:"auto", scrollbarWidth:"none"}}>
+            <Row>
+                <Col xs="2">
+                    <ItemsFilter
+                        priceRange={priceRange}
+                        categories={["Electricidad", "Plomeria", "Mecanica", "Construccion", "Jardineria"]}
+                        onSetFilters={handleSetFilters}
+                    />
+                </Col>
+                <Col xs="10">
+                    <Container className="w-100 d-flex flex-column align-items-center">
+                        <div className="w-100 d-flex align-items-center gap-2">
+                            <ItemSearch className="w-100 my-3" onFindItem={handleItemSearch}/>
+                            <DropdownButton title="Ordenar por">
+                                <Dropdown.Item onClick={() => handleSort("name")}>Nombre</Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleSort("priceDesc")}>Menor precio</Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleSort("priceAsc")}>Mayor precio</Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleSort("discount")}>Descuento</Dropdown.Item>
+                            </DropdownButton>
+                        </div>
+                        
+                        <Row className="w-100 g-4">
+                            {resultItems.length > 0 ? 
+                                (resultItems.slice(itemsToShow - itemsPerPage, itemsToShow).map((item) => (
+                                    <Col key={item.id} xs="4" lg="3">
+                                        <CardItem
+                                            id={item.id}
+                                            key={item.id}
+                                            title={item.title}
+                                            description={item.description}
+                                            price={item.price}
+                                            discount={item.discount}
+                                            imageUrl={item.imageUrl}
+                                            available={item.available}
+                                        />
+                                    </Col>)))
+                            :
+                                (<h2>No se encontraron productos.</h2>)
+                            }
+                        </Row>
+                        
+                        <Pagination className="mt-4">
+                            <Pagination.First onClick={() => {handleChangePage(1)}}/>
+                            <Pagination.Prev onClick={() => {handleChangePage(page-1)}}/>
+                            {Array.from({ length: pagesCount }, (_, i) => i).map((n) => (
+                                <Pagination.Item
+                                    key={n}
+                                    active={n+1  === page}
+                                    onClick={() => {handleChangePage(n+1)}}
+                                >{n+1}</Pagination.Item>
+                            ))}
+                            <Pagination.Next onClick={() => {handleChangePage(page+1)}}/>
+                            <Pagination.Last onClick={() => {handleChangePage(pagesCount)}}/>
+                        </Pagination>
+                    </Container>
+                </Col>
+            </Row>
         </div>
     </>
 }
