@@ -35,21 +35,27 @@
 }
 
 .col-id {
-    width: 5%;
-    max-width: 5%;
-    min-width: 5%;
+    width: 3%;
+    max-width: 3%;
+    min-width: 3%;
 }
 
 .col-title {
-    width: 11%;
-    max-width: 11%;
-    min-width: 11%;
+    width: 10%;
+    max-width: 10%;
+    min-width: 10%;
 }
 
 .col-description {
-    width: 25%;
-    max-width: 25%;
-    min-width: 25%;
+    width: 23%;
+    max-width: 23%;
+    min-width: 23%;
+}
+
+.col-image {
+    width: 15%;
+    max-width: 15%;
+    min-width: 15%;
 }
 
 .col-price {
@@ -64,10 +70,16 @@
     min-width: 7%;
 }
 
-.col-image {
-    width: 25%;
-    max-width: 25%;
-    min-width: 25%;
+.col-stock {
+    width: 5%;
+    max-width: 5%;
+    min-width: 5%;
+}
+
+.col-categories {
+    width: 10%;
+    max-width: 10%;
+    min-width: 10%;
 }
 
 .col-available {

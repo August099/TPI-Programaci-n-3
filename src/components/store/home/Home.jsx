@@ -1,7 +1,19 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { getItems } from "../store.services.js";
+import { useState, useEffect } from "react";
 import CardItem from "../cardItem/cardItem.jsx";
 
-const Home = ({items, categorias}) => {
+const Home = () => {
+  const categorias = ["categoria1", "categoria1", "categoria1"]
+  const [items, setItems] = useState([])
+
+  useEffect(() => {
+      getItems(
+          (data) => setItems(data),
+          (err) => console.log(err)
+      )
+  }, [])
+
 
   return (
     <div style={{height: "100vh", width: "100%", overflowY: "auto", scrollbarWidth: "none" }}>

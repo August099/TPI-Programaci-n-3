@@ -9,19 +9,8 @@ import { useNavigate } from "react-router-dom";
 import ItemSearch from "../store/itemSearch/itemSearch";
 import ConfigButton from "./configButton";
 
-function StoreNavbar({onLogout}) {
+function StoreNavbar({onLogout, role}) {
   const navigate = useNavigate();
-
-  /*const [itemSearch, setItemSearch] = useState("");
-
-  const handleItemSearch = ({value, search}) => {
-    setItemSearch(value);
-    
-    if (search) {
-      navigate("/store/products")
-    }
-    
-  };*/
 
   return (
     <Navbar
@@ -85,23 +74,28 @@ function StoreNavbar({onLogout}) {
             </Nav.Link>
 
             <Nav.Link
-              onClick={() => navigate("/store/items-admin")}
+              onClick={() => navigate(`/store/contacto`)}
               style={{
                 color: "#FEE9E1",
                 cursor: "pointer",
               }}
             >
-              Contacto
+              Contactos
             </Nav.Link>
-
+            { role === "Admin" || role === "Super" &&
+              <Nav.Link
+                onClick={() => navigate(`/store/items-admin`)}
+                style={{
+                  color: "#FEE9E1",
+                  cursor: "pointer",
+                }}
+              >
+                Administrar
+              </Nav.Link>
+            }
           </Nav>
-
-          {/*<Nav>
-            <ItemSearch onFindItem={handleItemSearch} value={itemSearch}/>
-          </Nav>*/}
-
           <Nav>
-            <ConfigButton onLogout={onLogout}/>
+            <ConfigButton onLogout={onLogout} role={role}/>
           </Nav>
 
         </Navbar.Collapse>

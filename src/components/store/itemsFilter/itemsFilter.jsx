@@ -56,12 +56,12 @@ const ItemsFilter = ({
             <label><b>Categorias</b></label>
             
             {categories.map((c) => (
-                <div key={c} className="w-100 d-flex justify-content-between mt-1">
-                    <label className="ms-2">{c}</label>
+                <div key={c.id} className="w-100 d-flex justify-content-between mt-1">
+                    <label className="ms-2">{c.name}</label>
                     <Form.Check
-                        checked={selectedCategories.includes(c)}
+                        checked={selectedCategories.includes(c.id)}
                         onChange={(event) => {
-                            handleSelectedCategories(event.target.checked, c)
+                            handleSelectedCategories(event.target.checked, c.id)
                         }
                     }/>
                 </div>

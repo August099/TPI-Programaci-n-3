@@ -1,25 +1,65 @@
 import { Button, Form, Modal, InputGroup } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import { getCategories } from '../../store/store.services.js';
 
 const EditItem = ({ item, show, onClose, onConfirm}) => {
 
-  const [idValue, setIdValue] = useState(item?.id)
-  const [titleValue, setTitleValue] = useState(item?.title)
-  const [descriptionValue, setDescriptionValue] = useState(item?.description)
-  const [priceValue, setPriceValue] = useState(item?.price)
-  const [discountValue, setDiscountValue] = useState(item?.discount)
-  const [imageUrlValue, setImageUrlValue] = useState(item?.imageUrl)
-  const [availableValue, setAvailableValue] = useState(item?.available)
+  const [categoriesList, setCategoriesList] = useState([])
+
+  const [id, setId] = useState(0)
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
+  const [image, setImage] = useState("")
+  const [price, setPrice] = useState(0)
+  const [discount, setDiscount] = useState(0)
+  const [stock, setStock] = useState(0)
+  const [categories, setCategories] = useState([])
+  const [available, setAvailable] = useState(false)
 
   useEffect(() => {
-    setIdValue(item?.id)
-    setTitleValue(item?.title)
-    setDescriptionValue(item?.description)
-    setPriceValue(item?.price)
-    setDiscountValue(item?.discount)
-    setImageUrlValue(item?.imageUrl)
-    setAvailableValue(item?.available)
+    getCategories(
+      (data) => setCategoriesList(data),
+      (err) => console.log("Error al obtener las categorias")
+    )
+  }, [])
+
+  useEffect(() => {
+    if (item) {
+      setId(item.id)
+      setName(item.name)
+      setDescription(item.description)
+      setImage(item.image)
+      setPrice(item.price)
+      setDiscount(item.discount)
+      setStock(item.stock)
+      setCategories(item.categories.map(c => c.id))
+      setAvailable(item.available) 
+    }
   }, [item])
+
+  const handleConfirm = () => {
+    onConfirm(
+      {
+        id,
+        name,
+        description,
+        image,
+        price,
+        discount,
+        stock,
+        categories,
+        available
+      }
+    )
+  }
+
+  const handleSelectedCategories = (check, category) => {
+      if (check) {
+          setSelectedCategories([...selectedCategories, category])
+      } else {
+          setSelectedCategories(selectedCategories.filter((c) => c !== category))
+      }
+  }
 
   return (
     <>
@@ -33,18 +73,18 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
               <Form.Label>ID</Form.Label>
               <Form.Control
                 type="number"
-                value={idValue}
+                value={id}
                 disabled
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Titulo</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Nombre del producto"
-                value={titleValue}
-                onChange={(event) => {setTitleValue(event.target.value)}}
+                value={name}
+                onChange={(event) => {setName(event.target.value)}}
                 autoFocus
               />
             </Form.Group>
@@ -54,8 +94,18 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
               <Form.Control
                 as="textarea"
                 rows={3}
-                value={descriptionValue}
-                onChange={(event) => {setDescriptionValue(event.target.value)}}
+                value={description}
+                onChange={(event) => {setDescription(event.target.value)}}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Imagen</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="URL de la imagen"
+                value={image}
+                onChange={(event) => {setImage(event.target.value)}}
               />
             </Form.Group>
 
@@ -66,8 +116,8 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
                 <Form.Control
                   type="number"
                   placeholder="0"
-                  value={priceValue}
-                  onChange={(event) => {setPriceValue(event.target.value)}}
+                  value={price}
+                  onChange={(event) => {setPrice(event.target.value)}}
                   min={0}
                 />
               </InputGroup>
@@ -78,30 +128,45 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
               <Form.Control
                 type="number"
                 min={0}
-                max={1}
-                step={0.01}
+                max={100}
                 placeholder="0"
-                value={`${discountValue}`}
-                onChange={(event) => {setDiscountValue(event.target.value)}}
+                value={`${discount * 100}`}
+                onChange={(event) => {setDiscount(event.target.value / 100)}}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Imagen</Form.Label>
+              <Form.Label>Stock</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="URL de la imagen"
-                value={imageUrlValue}
-                onChange={(event) => {setImageUrlValue(event.target.value)}}
+                type="number"
+                placeholder="0"
+                value={stock}
+                onChange={(event) => {setStock(event.target.value)}}
+                min={0}
               />
             </Form.Group>
 
             <Form.Group className="mb-3 d-flex gap-3">
               <Form.Label>Disponible</Form.Label>
               <Form.Check
-                checked={availableValue}
-                onChange={(event) => {setAvailableValue(event.target.value)}}
+                checked={available}
+                onChange={(event) => {setAvailable(event.target.checked)}}
               />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Categorias</Form.Label>
+              {categoriesList.map((category) => (
+                  <div key={category.id} className="w-100 d-flex justify-content-between mt-1">
+                      <label className="ms-2">{category.name}</label>
+                      <Form.Check
+                          checked={categories.includes(category.id)}
+                          onChange={(event) => {
+                              handleSelectedCategories(event.target.checked, category.id)
+                          }
+                      }/>
+                  </div>
+              ))}
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -109,7 +174,7 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
           <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={onConfirm}>
+          <Button variant="primary" onClick={handleConfirm}>
             Save Changes
           </Button>
         </Modal.Footer>

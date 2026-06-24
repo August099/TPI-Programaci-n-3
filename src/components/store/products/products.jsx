@@ -1,10 +1,12 @@
 import { Container, Row, Col, Pagination, DropdownButton, Dropdown} from "react-bootstrap";
 import { useState, useRef, useEffect } from "react";
+import { getItems, getCategories, getItemsByCategories } from "../store.services.js";
+import { apllyDiscount } from "../store.helpers.js";
 import CardItem from "../cardItem/cardItem.jsx";
 import ItemSearch from "../itemSearch/itemSearch.jsx";
 import ItemsFilter from "../itemsFilter/itemsFilter.jsx";
 
-const Products = ({items}) => {
+const Products = () => {
     const itemsPerPage = 16
 
     const getPriceRange = (items) => {
@@ -15,12 +17,16 @@ const Products = ({items}) => {
         return [Math.min(...prices), Math.max(...prices)]
     }
 
+    
     const [page, setPage] = useState(1)
     const [itemsToShow, setItemsToShow] = useState(itemsPerPage)
     const [sortBy, setSortBy] = useState("name")
-    const [priceRange, setPriceRange] = useState(getPriceRange(items))
-    const [searchItems, setSearchItems] = useState(items)
-    const [resultItems, setResultItems] = useState(items)
+
+    const [items, setItems] = useState([])
+    const [categories, setCategories] = useState([])
+    const [priceRange, setPriceRange] = useState(getPriceRange([]))
+    const [searchItems, setSearchItems] = useState([])
+    const [resultItems, setResultItems] = useState([])
     
     const [onOffer, setOnOffer] = useState(false)
 
@@ -32,13 +38,13 @@ const Products = ({items}) => {
         const sorted = [...itemsList]
         switch (sortType) {
             case "name":
-                sorted.sort((a, b) => a.title.localeCompare(b.title))
+                sorted.sort((a, b) => a.name.localeCompare(b.name))
                 break
             case "priceAsc":
-                sorted.sort((a, b) => b.price - a.price)
+                sorted.sort((a, b) => apllyDiscount(b) - apllyDiscount(a))
                 break
             case "priceDesc":
-                sorted.sort((a, b) => a.price - b.price)
+                sorted.sort((a, b) => apllyDiscount(a) - apllyDiscount(b))
                 break
             case "discount":
                 sorted.sort((a, b) => b.discount - a.discount)
@@ -56,6 +62,23 @@ const Products = ({items}) => {
     }
 
     useEffect(() => {
+        getItems(
+            (data) => {
+                setItems(data)
+                setSearchItems(data)
+            },
+            (err) => console.log(err)
+        )
+
+        getCategories(
+            (data) => {
+                setCategories(data)
+            },
+            (err) => console.log(err)
+        )
+    }, [])
+
+    useEffect(() => {
         setResultItems(sortResults(searchItems, sortBy))
         setPriceRange(getPriceRange(searchItems))
         changePage(1)
@@ -68,7 +91,7 @@ const Products = ({items}) => {
     const handleItemSearch = (value) => {
         setSearchItems(
             items.filter((item) =>
-                item.title.trim().toLowerCase().includes(value.toLowerCase()),
+                item.name.trim().toLowerCase().includes(value.toLowerCase()),
             )
         );
     };
@@ -82,10 +105,10 @@ const Products = ({items}) => {
             searchItems.filter(
                 (item) => {
                     if (
-                        item.price >= priceRange[0] &&
-                        item.price <= priceRange[1] &&
+                        apllyDiscount(item) >= priceRange[0] &&
+                        apllyDiscount(item) <= priceRange[1] &&
                         (!onOffer || item.discount > 0) &&
-                        (categories.length === 0 || categories.includes(item.category))
+                        (categories.length === 0 || categories.includes(item.id))
                     ) {
                         return true
                     }
@@ -107,7 +130,7 @@ const Products = ({items}) => {
                 <Col xs="2">
                     <ItemsFilter
                         priceRange={priceRange}
-                        categories={["Electricidad", "Plomeria", "Mecanica", "Construccion", "Jardineria"]}
+                        categories={categories}
                         onSetFilters={handleSetFilters}
                     />
                 </Col>
@@ -128,14 +151,8 @@ const Products = ({items}) => {
                                 (resultItems.slice(itemsToShow - itemsPerPage, itemsToShow).map((item) => (
                                     <Col key={item.id} xs="4" lg="3">
                                         <CardItem
-                                            id={item.id}
                                             key={item.id}
-                                            title={item.title}
-                                            description={item.description}
-                                            price={item.price}
-                                            discount={item.discount}
-                                            imageUrl={item.imageUrl}
-                                            available={item.available}
+                                            item={item}
                                         />
                                     </Col>)))
                             :

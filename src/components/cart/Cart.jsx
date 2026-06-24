@@ -43,11 +43,6 @@ const CartPage = () => {
   return (
     <div className="vh-100 py-5 px-3 text-dark" style={{ backgroundColor: "#FEE9E1", overflowY: "auto" }}>
       <div className="container" style={{ maxWidth: "1024px" }}>
-        
-        <Button variant="link" className="text-decoration-none text-secondary p-0 mb-4 text-start">
-          ← Volver a la tienda
-        </Button>
-
         <h1 className="h2 fw-bold text-dark mb-4">Tu Carrito</h1>
 
 
