@@ -55,9 +55,9 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
 
   const handleSelectedCategories = (check, category) => {
       if (check) {
-          setSelectedCategories([...selectedCategories, category])
+          setCategories([...categories, category])
       } else {
-          setSelectedCategories(selectedCategories.filter((c) => c !== category))
+          setCategories(categories.filter((c) => c !== category))
       }
   }
 

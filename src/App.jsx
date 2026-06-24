@@ -6,11 +6,6 @@ import Protected from './components/routing/Protected.jsx';
 import { ToastContainer } from "react-toastify";
 import { useState } from 'react';
 import StorePanel from './components/storePanel/storePanel.jsx';
-//import StoreNavbar from './components/navbar/navbar.jsx';
-
-
-
-
 
 function App() {
   return (

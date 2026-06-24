@@ -6,6 +6,7 @@ import { getItems, updateItem, deleteItem, addItem } from '../store.services';
 import EditItem from '../../ui/modal/editItem';
 import ConfirmDelete from '../../ui/modal/delete';
 import { data } from 'react-router';
+import ItemSearch from '../itemSearch/itemSearch';
 
 const ItemsAdmin = () => {
 
@@ -23,6 +24,11 @@ const ItemsAdmin = () => {
     updateItem(
       item,
       (data) => {
+        setItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === data.id ? data : item
+          )
+        )
         setEditItem(null)
       },
       (err) => console.log(err)
@@ -38,6 +44,9 @@ const ItemsAdmin = () => {
     deleteItem(
       deleteItemId,
       (data) => {
+        setItems((prevItems) =>
+          prevItems.filter((item) => item.id !== data)
+        )
         setDeleteItemId(null)
       },
       (err) => console.log("Error al eliminar", err)
@@ -54,6 +63,18 @@ const ItemsAdmin = () => {
     setDeleteItemId(null)
     setShowDeleteModal(false)
   }
+
+  const handleAddItem = () => {
+
+  }
+
+  const handleItemSearch = (value) => {
+        setSearchItems(
+            items.filter((item) =>
+                item.name.trim().toLowerCase().includes(value.toLowerCase()),
+            )
+        );
+    };
 
   useEffect(() => {
     getItems(
@@ -76,6 +97,15 @@ const ItemsAdmin = () => {
 
   return (
     <div className="w-100 h-100 p-3" style={{overflowY: "auto", scrollbarWidth: "none"}}>
+      <div className='d-flex gap-3'>
+        <Button
+        onClick={handleAddItem}
+        >
+          Agregar
+        </Button>
+        <ItemSearch onFindItem={handleItemSearch}/>
+      </div>
+      
       <Table className='tabla-items' style={{"--bs-table-bg": "var(--secondary)"}} striped bordered hover>
         <colgroup>
           <col className='col-id'/>   

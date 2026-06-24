@@ -108,7 +108,7 @@ const Products = () => {
                         apllyDiscount(item) >= priceRange[0] &&
                         apllyDiscount(item) <= priceRange[1] &&
                         (!onOffer || item.discount > 0) &&
-                        (categories.length === 0 || categories.includes(item.id))
+                        (categories.length === 0 || item.categories?.some(ic => categories.includes(ic.id)))
                     ) {
                         return true
                     }

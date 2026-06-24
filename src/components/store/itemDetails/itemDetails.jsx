@@ -3,7 +3,9 @@ import {
     getItem,
     addQuestion,
     getQuestions,
-    deleteQuestion
+    deleteQuestion,
+    getRole,
+    addAnswer
 } from "../store.services";
 import { Container, Row, Col, Image, Button, FormControl } from "react-bootstrap";
 import { Star, StarFill } from "react-bootstrap-icons";
@@ -11,8 +13,8 @@ import { useEffect, useState, useContext } from "react";
 import { AutheticationContext } from "../../services/auth/auth.context.jsx";
 import { errorToast } from "../../ui/notifications/notifications";
 import { apllyDiscount } from "../store.helpers.js";
-import { getRole } from "../store.services.js";
 import QuestionItem from "./questionItem.jsx";
+import ConfirmDelete from "../../ui/modal/delete.jsx";
 
 const ItemDetails = () => {
     const location = useLocation();
@@ -35,6 +37,10 @@ const ItemDetails = () => {
     const [stock, setStock] = useState(0)
     const [quantity, setQuantity] = useState(1)
     const [question, setQuestion] = useState("")
+    const [role, setRole] = useState("User")
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [questionDelete, setquestionDelete] = useState(null)
 
     useEffect(() => {
         getItem(
@@ -53,6 +59,11 @@ const ItemDetails = () => {
                 setUserQuestions(data.filter(q => q.userId === user.id))
             },
             (err) => console.log("Error al cargar las preguntas")
+        )
+
+        getRole(
+            (data) => setRole(data),
+            (err) => console.log("Error al obtener el rol")
         )
     }, [id]);
 
@@ -73,11 +84,68 @@ const ItemDetails = () => {
     const handleAddQuestion = () => {
         addQuestion(
             {itemId: parseInt(id), question},
-            (data) => console.log("Se realizo la pregunta"),
+            (data) => setUserQuestions((prevUserQuestions) => [...prevUserQuestions, data]),
             (err) => console.log("Error al subir la pregunta")
         )
         setQuestion("")
     }
+
+    const handleAnswer = (id, answer, isOwner = false) => {
+        addAnswer(
+            id,
+            {answer},
+            (data) => {
+                isOwner ?
+                    setUserQuestions((prevUserQuestion) =>
+                        prevUserQuestion.map(q => 
+                            q.id === data.id ? data : q
+                        )
+                    )
+                    :
+                    setQuestions((prevUserQuestion) =>
+                        prevUserQuestion.map(q => 
+                            q.id === data.id ? data : q
+                        )
+                    )
+            },
+            (err) => {console.log("Error al cargar la respuesta")}
+        )
+    }
+
+    const handleDelete = (id, isOwner) => {
+        setquestionDelete({id, isOwner})
+    }
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false)
+        setquestionDelete(null)
+    }
+
+    const handleConfirmDelete = () => {
+        deleteQuestion(
+            questionDelete.id,
+            (data) => {
+                questionDelete.isOwner ?
+                    setUserQuestions((prevItems) =>
+                        prevItems.filter((item) => item.id !== questionDelete.id)
+                    )
+                :
+                    setQuestions((prevItems) =>
+                        prevItems.filter((item) => item.id !== questionDelete.id)
+                    )
+            },
+            (err) => console.log("Error al intentar eliminar")
+        )
+        
+        setShowDeleteModal(false)
+        setquestionDelete(null)
+    }
+
+    useEffect(() => {
+        if (questionDelete) {
+            setShowDeleteModal(true)
+        }
+    }, [questionDelete])
 
     return (
         <>
@@ -97,6 +165,12 @@ const ItemDetails = () => {
                             <div className="w-100 p-2 d-flex align-items-center justify-content-center rounded-3" style={{background:"var(--primary)"}}>
                                 <h2 className="fw-bold m-0">{item.name}</h2>
                             </div>
+                            <div className="w-100 h-100 p-2 d-flex flex-column rounded-3" style={{background:"var(--primary)", minHeight:0}}>
+                                <h3>Descripcion</h3>
+                                <div style={{overflowY:"auto", scrollbarWidth:"none"}}>
+                                    <p className="ms-3 fs-5 text-break">{item?.description} </p>
+                                </div>
+                            </div>
                             <div className="w-100 d-flex justify-content-between">
                                 <div className="p-2 d-flex align-items-center justify-content-center rounded-3" style={{background:"var(--primary)"}}>
                                     {item.discount ? 
@@ -106,12 +180,6 @@ const ItemDetails = () => {
                                 </div>
                                 <div className="p-2 d-flex align-items-center justify-content-center rounded-3" style={{background:"var(--primary)"}}>
                                     <h4 className="fw-bold m-0">Stock: {stock}</h4>
-                                </div>
-                            </div>
-                            <div className="w-100 h-100 p-2 d-flex flex-column rounded-3" style={{background:"var(--primary)", minHeight:0}}>
-                                <h3>Descripcion</h3>
-                                <div style={{overflowY:"auto", scrollbarWidth:"none"}}>
-                                    <p className="ms-3 fs-5 text-break">{item?.description} </p>
                                 </div>
                             </div>
                             
@@ -177,33 +245,40 @@ const ItemDetails = () => {
                                     {userQuestions.map(q => (
                                         <QuestionItem
                                             key={q.id}
-                                            name={q.user.name} 
-                                            question={q.question}
-                                            answer={q.answer}
-                                            delivered={q.createdAt}
-                                            answered={q.updatedAt}
+                                            question={q}
+                                            role={role}
+                                            isOwner={true}
+                                            onAnswer={handleAnswer}
+                                            onDelete={handleDelete}
                                         />
                                     ))}
                                 </div>
                             </div>
                         }
                         {   questions.length > 0 &&
-                            <div>
-                                <h5>Todas las preguntas</h5>
-                                {questions.map(q => (
-                                    <QuestionItem 
-                                        key={q.id}
-                                        name={q.user.name} 
-                                        question={q.question}
-                                        answer={q.answer}
-                                        delivered={q.createdAt}
-                                        answered={q.updatedAt}
-                                    />
-                                ))}
+                            <div
+                                className="d-flex flex-column gap-1 mt-2"
+                            >
+                                <h5>Tus preguntas</h5>
+                                <div
+                                    className="d-flex flex-column gap-3"
+                                    style={{maxHeight: "370px", overflowY: "auto", scrollbarWidth: "none"}}
+                                >
+                                    {questions.map(q => (
+                                        <QuestionItem 
+                                            key={q.id}
+                                            question={q}
+                                            role={role}
+                                            onAnswer={handleAnswer}
+                                            onDelete={handleDelete}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         }
                     </div>
                 </section>
+                <ConfirmDelete show={showDeleteModal} onConfirm={handleConfirmDelete} onClose={handleCloseDeleteModal}/>
             </div>
         </>
     );

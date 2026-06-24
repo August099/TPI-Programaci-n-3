@@ -190,6 +190,27 @@ export const addQuestion = (newQuestion, onSuccess, onError) => {
     .catch(onError);
 };
 
+export const addAnswer = (id, answer, onSuccess, onError) => {
+    fetch(`${baseUrl}/questions/${id}/answer`, {
+        headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(answer),
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al crear la respuesta");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
+
 export const deleteQuestion = (itemId, onSuccess, onError) => {
     fetch(`${baseUrl}/questions/${itemId}`, {
         headers: {
@@ -208,3 +229,4 @@ export const deleteQuestion = (itemId, onSuccess, onError) => {
     .then(onSuccess)
     .catch(onError);
 };
+

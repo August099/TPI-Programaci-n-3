@@ -16,7 +16,6 @@ export const AutheticationContextProvider = ({ children }) => {
   const [token, setToken] = useState(tokenValue);
   const [user, setUser] = useState(decodeToken(tokenValue))
 
-
   const handleUserLogin = (newToken) => {
     localStorage.setItem("ferreteria-token", newToken);
     setToken(newToken);
