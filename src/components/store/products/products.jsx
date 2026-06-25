@@ -12,7 +12,7 @@ const Products = () => {
     const getPriceRange = (items) => {
         if (!items.length) return [0,0]
 
-        const prices = items.map((item) => item.price)
+        const prices = items.map((item) => apllyDiscount(item))
         
         return [Math.min(...prices), Math.max(...prices)]
     }
@@ -104,6 +104,7 @@ const Products = () => {
         const filtered = 
             searchItems.filter(
                 (item) => {
+                    console.log(item)
                     if (
                         apllyDiscount(item) >= priceRange[0] &&
                         apllyDiscount(item) <= priceRange[1] &&

@@ -5,7 +5,8 @@ import {
     getQuestions,
     deleteQuestion,
     getRole,
-    addAnswer
+    addAnswer,
+    addItemToCart
 } from "../store.services";
 import { Container, Row, Col, Image, Button, FormControl } from "react-bootstrap";
 import { Star, StarFill } from "react-bootstrap-icons";
@@ -141,6 +142,15 @@ const ItemDetails = () => {
         setquestionDelete(null)
     }
 
+    const handleAddToCart = () => {
+        console.log(item)
+        addItemToCart(
+          {itemId: item.id, quantity},
+          (data) => console.log(data),
+          (err) => console.log("Error al introducir al carrito")
+        )
+      }
+
     useEffect(() => {
         if (questionDelete) {
             setShowDeleteModal(true)
@@ -174,7 +184,7 @@ const ItemDetails = () => {
                             <div className="w-100 d-flex justify-content-between">
                                 <div className="p-2 d-flex align-items-center justify-content-center rounded-3" style={{background:"var(--primary)"}}>
                                     {item.discount ? 
-                                    <h5 className="fw-bold m-0">Precio: <span style={{textDecoration: "line-through 2px", color: "GrayText", fontSize: "16px"}}>${item.price * quantity}</span> ${apllyDiscount(item)}</h5>
+                                    <h5 className="fw-bold m-0">Precio: <span style={{textDecoration: "line-through 2px", color: "GrayText", fontSize: "16px"}}>${item.price * quantity}</span> ${apllyDiscount(item) * quantity}</h5>
                                     :
                                     <h4 className="fw-bold m-0">Precio: ${item.price * quantity}</h4>}
                                 </div>
@@ -212,9 +222,10 @@ const ItemDetails = () => {
                                     color: "#222725",
                                     fontWeight: "bold",
                                 }}
-                            >
-                                Agregar al carrito
-                            </Button>
+                                onClick={handleAddToCart}
+                                >
+                                    Agregar al carrito
+                                </Button>
                             </div>
                         </div>
                     </div>

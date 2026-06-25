@@ -1,7 +1,17 @@
-:root {
+[data-bs-theme="light"] {
     
     --primary: #FEE9E1;
     --secondary: #B09E99;
+    --black: #222725;
+    --white: #f5f5f5;
+    --blue: #0d6efd;
+    --green: #06D6A0;
+    --red: #D91E36;
+}
+
+[data-bs-theme="dark"] {
+    --primary: #857C8D;
+    --secondary: #C1B8C8;
     --black: #222725;
     --white: #f5f5f5;
     --blue: #0d6efd;

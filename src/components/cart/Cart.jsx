@@ -1,27 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-
-const carritoinicial = [
-  { 
-    id: 1, 
-    name: "Camiseta Térmica Cyberpunk", 
-    price: 49.99, 
-    quantity: 1, 
-    size: "L", 
-    image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=150" 
-  },
-  { 
-    id: 2, 
-    name: "Zapatillas Urbanas 'Ghost'", 
-    price: 120.00, 
-    quantity: 2, 
-    size: "42", 
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150" 
-  }
-];
+import { getCart } from "../store/store.services";
 
 const CartPage = () => {
-  const [cart, setCart] = useState(carritoinicial);
+  const [cart, setCart] = useState([]);
+  const [total, setTotal] = useState(0)
+  const [subtotal, setSubtotal] = useState(0)
 
   const cambiarCantidad = (id, incremento) => {
     setCart(prevCart =>
@@ -33,15 +17,23 @@ const CartPage = () => {
     );
   };
 
+  useEffect(() => {
+    getCart(
+      (data) => setCart(data),
+      (err) => console.log("Error al cargar los productos")
+    )
+  },[])
+
+  useEffect(() => {
+    console.log(cart)
+  },[cart])
+
   const eliminarProducto = (id) => {
     setCart(prevCart => prevCart.filter(item => item.id !== id));
   };
 
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const total = subtotal;
-
   return (
-    <div className="vh-100 py-5 px-3 text-dark" style={{ backgroundColor: "#FEE9E1", overflowY: "auto" }}>
+    <div className="vh-100 py-5 px-3 text-dark" style={{ backgroundColor: "var(--primary)", overflowY: "auto" }}>
       <div className="container" style={{ maxWidth: "1024px" }}>
         <h1 className="h2 fw-bold text-dark mb-4">Tu Carrito</h1>
 

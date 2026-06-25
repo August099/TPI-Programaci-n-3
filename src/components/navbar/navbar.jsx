@@ -72,16 +72,7 @@ function StoreNavbar({onLogout, role}) {
             >
               Carrito
             </Nav.Link>
-
-            <Nav.Link
-              onClick={() => navigate(`/store/contacto`)}
-              style={{
-                color: "#FEE9E1",
-                cursor: "pointer",
-              }}
-            >
-              Contactos
-            </Nav.Link>
+            
             { role === "Admin" || role === "Super" &&
               <Nav.Link
                 onClick={() => navigate(`/store/items-admin`)}

@@ -1,17 +1,26 @@
 import { Button, Card } from "react-bootstrap";
 import { apllyDiscount } from "../store.helpers.js";
 import { useNavigate } from "react-router";
+import { addItemToCart } from "../store.services.js";
 
 const CardItem = ({ item }) => {
   const navigate = useNavigate()
+
+  const handleAddToCart = () => {
+    addItemToCart(
+      {itemId: item.id, quantity: 1},
+      (data) => console.log(data),
+      (err) => console.log("Error al introducir al carrito")
+    )
+  }
 
   return (
     <Card
       style={{
         width: "100%",
         maxWidth: "260px",
-        backgroundColor: "#B09E99",
-        color: "#222725",
+        backgroundColor: "var(--secondary)",
+        color: "var(--black)",
         border: "none",
         borderRadius: "10px",
         boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
@@ -46,6 +55,7 @@ const CardItem = ({ item }) => {
             width: "100%",
             fontWeight: "bold",
           }}
+          onClick={handleAddToCart}
         >
           Agregar al carrito
         </Button>

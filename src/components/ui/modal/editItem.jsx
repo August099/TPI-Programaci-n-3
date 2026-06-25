@@ -34,6 +34,16 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
       setStock(item.stock)
       setCategories(item.categories.map(c => c.id))
       setAvailable(item.available) 
+    } else {
+      setId(0)
+      setName("")
+      setDescription("")
+      setImage("")
+      setPrice(0)
+      setDiscount(0)
+      setStock(0)
+      setCategories([])
+      setAvailable(false) 
     }
   }, [item])
 

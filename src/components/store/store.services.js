@@ -230,3 +230,117 @@ export const deleteQuestion = (itemId, onSuccess, onError) => {
     .catch(onError);
 };
 
+export const addItemToCart = (item, onSuccess, onError) => {
+    fetch(`${baseUrl}/cart/items`, {
+        headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "POST",
+        body: JSON.stringify(item),
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al agregar al carrito");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+}
+
+export const getCart = (onSuccess, onError) => {
+    fetch(`${baseUrl}/cart`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al obtener el carrito");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+}
+
+export const incrementQuantity = (itemId, onSuccess, onError) => {
+  fetch(`${baseUrl}/cart/items/${itemId}/increment`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+    },
+    method: "PATCH",
+  })
+    .then((res) => {
+      if (!res.ok) {
+        return res.json().then((err) => {
+          throw new Error(err.message || "Error al incrementar la cantidad");
+        });
+      }
+      return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
+
+export const decrementQuantity = (itemId, onSuccess, onError) => {
+  fetch(`${baseUrl}/cart/items/${itemId}/decrement`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+    },
+    method: "PATCH",
+  })
+    .then((res) => {
+      if (!res.ok) {
+        return res.json().then((err) => {
+          throw new Error(err.message || "Error al decrementar la cantidad");
+        });
+      }
+      return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
+
+export const removeItemFromCart = (itemId, onSuccess, onError) => {
+    fetch(`${baseUrl}/cart/items/${itemId}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "DELETE",
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al eliminar la pregunta");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
+
+export const clearCart = (onSuccess, onError) => {
+    fetch(`${baseUrl}/cart`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "DELETE",
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al eliminar la pregunta");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};

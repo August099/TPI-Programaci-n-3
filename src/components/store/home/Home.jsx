@@ -102,12 +102,7 @@ const Home = () => {
               <CardItem
                 id={item.id}
                 key={item.id}
-                title={item.title}
-                description={item.description}
-                price={item.price}
-                discount={item.discount}
-                imageUrl={item.imageUrl}
-                available={item.available}
+                item={item}
               />
             </Col>
           ))}
