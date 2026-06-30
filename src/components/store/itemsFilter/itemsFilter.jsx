@@ -42,7 +42,7 @@ const ItemsFilter = ({
     }
 
     return <>
-    <Container className="w-100 sticky-top d-flex flex-column align-items-center rounded-3 p-3" style={{backgroundColor: "var(--secondary)"}}>
+    <Container className="w-100 sticky-top d-flex flex-column align-items-center rounded-3 p-3" style={{backgroundColor: "var(--secondary)", color: "var(--black)"}}>
         <h3>Filtros</h3>
 
         <PriceSlider priceRange={priceRange} values={priceRangeValue} onChangeValue={handlerChangePriceRange}/>

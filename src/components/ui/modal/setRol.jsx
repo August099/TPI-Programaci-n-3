@@ -1,108 +1,86 @@
 import { Button, Form, Modal, InputGroup } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
-const SetRol = ({ item, show, onClose, onConfirm}) => {
-
-  const [idValue, setIdValue] = useState(item?.id)
-  const [titleValue, setTitleValue] = useState(item?.title)
-  const [descriptionValue, setDescriptionValue] = useState(item?.description)
-  const [priceValue, setPriceValue] = useState(item?.price)
-  const [discountValue, setDiscountValue] = useState(item?.discount)
-  const [imageUrlValue, setImageUrlValue] = useState(item?.imageUrl)
-  const [availableValue, setAvailableValue] = useState(item?.available)
+const CreateUser = ({ show, onClose, onConfirm}) => {
+  const [nameValue, setNameValue] = useState('')
+  const [emailValue, setEmailValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState('')
+  const [roleValue, setRoleValue] = useState('User')
 
   useEffect(() => {
-    setIdValue(item?.id)
-    setTitleValue(item?.title)
-    setDescriptionValue(item?.description)
-    setPriceValue(item?.price)
-    setDiscountValue(item?.discount)
-    setImageUrlValue(item?.imageUrl)
-    setAvailableValue(item?.available)
-  }, [item])
+    setNameValue('')
+    setEmailValue('')
+    setPasswordValue('')
+    setConfirmPasswordValue('')
+    setRoleValue('User')
+  }, [ show ])
 
   return (
     <>
       <Modal show={show} onHide={onClose} backdrop="static" scrollable>
         <Modal.Header closeButton>
-          <Modal.Title>Editar producto</Modal.Title>
+          <Modal.Title>Selecciona el nuevo rol del usuario</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{scrollbarWidth: "none"}}>
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>ID</Form.Label>
-              <Form.Control
-                type="number"
-                value={idValue}
-                disabled
-              />
-            </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Titulo</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Nombre del producto"
-                value={titleValue}
-                onChange={(event) => {setTitleValue(event.target.value)}}
+                value={nameValue}
+                onChange={(event) => {setNameValue(event.target.value)}}
                 autoFocus
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Descripcion</Form.Label>
+              <Form.Label>Email</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={3}
-                value={descriptionValue}
-                onChange={(event) => {setDescriptionValue(event.target.value)}}
+                type="text"
+                inputMode="email"
+                placeholder="Email"
+                value={emailValue}
+                onChange={(event) => {setEmailValue(event.target.value)}}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Precio</Form.Label>
+              <Form.Label>Password</Form.Label>
               <InputGroup>
                 <InputGroup.Text>$</InputGroup.Text>
                 <Form.Control
-                  type="number"
-                  placeholder="0"
-                  value={priceValue}
-                  onChange={(event) => {setPriceValue(event.target.value)}}
-                  min={0}
+                  type="password"
+                  placeholder="Contraseña"
+                  value={passwordValue}
+                  onChange={(event) => {setPasswordValue(event.target.value)}}
                 />
               </InputGroup>
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Descuento</Form.Label>
+              <Form.Label>Confirm password</Form.Label>
               <Form.Control
-                type="number"
-                min={0}
-                max={1}
-                step={0.01}
-                placeholder="0"
-                value={`${discountValue}`}
-                onChange={(event) => {setDiscountValue(event.target.value)}}
+                type="password"
+                placeholder="Confirmar contraseña"
+                value={confirmPasswordValue}
+                onChange={(event) => {setConfirmPasswordValue(event.target.value)}}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Imagen</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="URL de la imagen"
-                value={imageUrlValue}
-                onChange={(event) => {setImageUrlValue(event.target.value)}}
-              />
+              <Form.Label>Role</Form.Label>
+              <Form.Select
+                value={roleValue}
+                onChange={(event) => {setRoleValue(event.target.value)}}
+              >
+                <option value="User">User</option>
+                <option value="Admin">Admin</option>
+                <option value="Super">Super</option>
+              </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3 d-flex gap-3">
-              <Form.Label>Disponible</Form.Label>
-              <Form.Check
-                checked={availableValue}
-                onChange={(event) => {setAvailableValue(event.target.value)}}
-              />
-            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -110,7 +88,7 @@ const SetRol = ({ item, show, onClose, onConfirm}) => {
             Close
           </Button>
           <Button variant="primary" onClick={onConfirm}>
-            Save Changes
+            Save
           </Button>
         </Modal.Footer>
       </Modal>

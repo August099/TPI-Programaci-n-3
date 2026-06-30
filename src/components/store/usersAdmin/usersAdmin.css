@@ -1,0 +1,19 @@
+.col-discount, .col-available {
+    width: 7%;
+    max-width: 7%;
+    min-width: 7%;
+}
+
+.col-categories, .col-price,
+.col-title {
+    width: 10%;
+    max-width: 10%;
+    min-width: 10%;
+}
+
+.col-edit, .col-delete,
+.col-stock {
+    width: 5%;
+    max-width: 5%;
+    min-width: 5%;
+}

@@ -1,33 +1,65 @@
-import {Carousel} from 'react-bootstrap';
+import { useState } from "react";
+import { Button } from "react-bootstrap";
+import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
+import CardItem from "../cardItem/cardItem.jsx"
 
-function UncontrolledExample() {
+const ItemsCarousel = ({ items }) => {
+  const [startIndex, setStartIndex] = useState(0);
+
+  const itemsToShow = 5
+
+  const maxIndex = Math.max(items.length - itemsToShow, 0);
+
+  const handlePrev = () => {
+    setStartIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleNext = () => {
+    setStartIndex((prev) => Math.min(prev + 1, maxIndex));
+  };
+
+  const itemWidth = 100 / itemsToShow;
+
   return (
-    <Carousel>
-      <Carousel.Item>
-        {/* <ExampleCarouselImage text="First slide" />*/}
-        <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        {/* <ExampleCarouselImage text="Second slide" />*/}
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        {/* <ExampleCarouselImage text="Third slide" />*/}
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-        </Carousel.Caption>
-      </Carousel.Item>
-    </Carousel>
-  );
-}
+    <div className="position-relative">
+      <div style={{ overflow: "hidden" }}>
+        <div
+          className="w-100 d-flex"
+          style={{
+            transform: `translateX(-${startIndex * itemWidth}%)`,
+            transition: "transform 0.3s ease",
+          }}
+        >
+          {items.map((item) => (
+            <div
+              key={item.id}
+              style={{ flex: `0 0 ${itemWidth}%`, paddingInline: "8px", minWidth: 0 }}
+            >
+              <CardItem item={item}/>
+            </div>
+          ))}
+        </div>
+      </div>
 
-export default UncontrolledExample;
+      <Button
+        onClick={handlePrev}
+        disabled={startIndex === 0}
+        className="position-absolute top-50 translate-middle-y rounded-circle"
+        style={{ backgroundColor: "var(--secondary)", border: "none", width: 36, height: 36, left: -38 }}
+      >
+        <ChevronLeft />
+      </Button>
+
+      <Button
+        onClick={handleNext}
+        disabled={startIndex >= maxIndex}
+        className="position-absolute top-50 translate-middle-y rounded-circle"
+        style={{ backgroundColor: "var(--secondary)", border: "none", width: 36, height: 36, right: -38 }}
+      >
+        <ChevronRight />
+      </Button>
+    </div>
+  );
+};
+
+export default ItemsCarousel;

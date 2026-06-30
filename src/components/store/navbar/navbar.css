@@ -9,3 +9,16 @@
   background-color: transparent !important;
   --bs-dropdown-link-active-color: #212529 !important
 }
+
+.dropdown-item-admin {
+  color: whitesmoke !important;
+}
+
+.dropdown-item-admin:hover,
+.dropdown-item-admin:active {
+  background-color: #323936 !important;
+}
+
+.dropdown-item-admin:focus{
+  background-color: transparent !important;
+}

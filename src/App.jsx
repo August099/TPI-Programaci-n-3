@@ -6,6 +6,7 @@ import Protected from './components/routing/Protected.jsx';
 import { ToastContainer } from "react-toastify";
 import { useState } from 'react';
 import StorePanel from './components/storePanel/storePanel.jsx';
+import NotFound from './components/ui/notFound/NotFound.jsx';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           />
         </Route>
         
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
 

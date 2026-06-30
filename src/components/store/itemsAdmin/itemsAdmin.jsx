@@ -1,24 +1,65 @@
 import './itemsAdmin.css'
 import { useState, useEffect } from 'react';
-import { Button, Table } from "react-bootstrap";
+import { Button, Table, Image } from "react-bootstrap";
 import { PencilSquare, Trash } from "react-bootstrap-icons"
 import { getItems, updateItem, deleteItem, addItem } from '../store.services';
 import EditItem from '../../ui/modal/editItem';
-import ConfirmDelete from '../../ui/modal/delete';
+import Confirm from '../../ui/modal/confirm';
+import CategoriesModal from '../../ui/modal/categories';
 import { data } from 'react-router';
+import { errorToast, successToast } from '../../ui/notifications/notifications';
+import ItemSearch from '../itemSearch/itemSearch';
+import TableItem from '../tableItem/TableItem';
 
 const ItemsAdmin = () => {
 
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [items, setItems] = useState([])
+  const [searchItems, setSearchItems] = useState([])
+  const [resultItems, setResultItems] = useState([])
+  const [sortBy, setSortBy] = useState("id")
+  const [order, setOrder] = useState("desc")
   const [editItem, setEditItem] = useState(null)
-  const [deleteItemId, setDeleteItemId] = useState(null)
-
+  const [actionModal, setActionModal] = useState('')
+  const [messageModal, setMessageModal] = useState('')
+  const [handleConfirm, setHandleConfirm] = useState(null)
+  
+  const handleAcceptConfirm = (item) => {
+    setActionModal(`Eliminar ${item.name}.`)
+    setMessageModal("¿Esta seguro que queres eliminar el producto?")
+    setHandleConfirm(() => () => {
+      deleteItem(
+        item.id,
+        (data) => {
+          successToast("Producto eliminado correctamente.")
+          setItems((prevItems) => 
+            prevItems.filter((i) =>
+              i.id !== data 
+            )
+          )
+          setSearchItems((prevItems) => 
+            prevItems.filter((i) =>
+              i.id !== data 
+            )
+          )
+        },
+        (err) => console.log(err)
+      )
+      setShowConfirmModal(false)
+    })
+    setShowConfirmModal(true)
+  }
+  
+  const handleCloseConfirmModal = () => {
+    setShowConfirmModal(false)
+  }
+  
   const handleEditItem = (item) => {
     setEditItem(item)
   }
-
+  
   const handleConfirmEdit = (item) => {
     if (editItem) {
       updateItem(
@@ -29,6 +70,11 @@ const ItemsAdmin = () => {
               item.id === data.id ? data : item
             )
           )
+          setResultItems((prevItems) =>
+            sortResults(prevItems.map((item) =>
+              item.id === data.id ? data : item
+            ), sortBy, order)
+          )
           setEditItem(null)
         },
         (err) => console.log(err)
@@ -38,8 +84,12 @@ const ItemsAdmin = () => {
         item,
         (data) => {
           setItems((prevItems) =>
-            [...prevItems, data]
+            [data, ...prevItems]
           )
+          setSearchItems((prevItems) =>
+            [data, ...prevItems]
+          )
+          setEditItem(null)
         }
       )
     }
@@ -47,44 +97,123 @@ const ItemsAdmin = () => {
     setShowEditModal(false)
   }
 
-  const handleDeleteItem = (item) => {
-    setDeleteItemId(item.id)
-  }
-
-  const handleConfirmDelete = (id) => {
-    deleteItem(
-      deleteItemId,
-      (data) => {
-        setItems((prevItems) =>
-          prevItems.filter((item) => item.id !== data)
-        )
-        setDeleteItemId(null)
-      },
-      (err) => console.log("Error al eliminar", err)
-    )
-    setShowDeleteModal(false)
-  }
-
   const handleCloseEditModal = () => {
     setEditItem(null)
     setShowEditModal(false)
-  }
-
-  const handleCloseDeleteModal = () => {
-    setDeleteItemId(null)
-    setShowDeleteModal(false)
   }
 
   const handleAddItem = () => {
     setShowEditModal(true)
   }
 
+  const handleAdminCategories = () => {
+    setShowCategoryModal(true)
+  }
+
+  const handleCloseCategoryModal = () => {
+    getItems(
+      (data) => {
+        setItems(data)
+        setSearchItems(data)
+      },
+      (err) => errorToast("Error al cargar los productos")
+    )
+    setShowCategoryModal(false)
+  }
+
+  const catToString = (categories) => {
+    return categories.map(c => c.name).join(" - ")
+  }
+
+  const sortResults = (itemsList, sortType, order) => {
+    const sorted = [...itemsList]
+    switch (sortType) {
+      case "id":
+        if (order === "asc") {
+          sorted.sort((a, b) => a.id - b.id)
+        } else {
+          sorted.sort((a, b) => b.id - a.id)
+        }
+        break
+      case "name":
+        if (order === "asc") {
+          sorted.sort((a, b) => a.name.localeCompare(b.name))
+        } else {
+          sorted.sort((a, b) => b.name.localeCompare(a.name))
+        }
+        break
+      case "description":
+        if (order === "asc") {
+          sorted.sort((a, b) => a.description.localeCompare(b.description))
+        } else {
+          sorted.sort((a, b) => b.description.localeCompare(a.description))
+        }
+        break
+      case "price":
+        if (order === "asc") {
+          sorted.sort((a, b) => a.price - b.price)
+        } else {
+          sorted.sort((a, b) => b.price - a.price)
+        }
+        break
+      case "discount":
+        if (order === "asc") {
+          sorted.sort((a, b) => a.discount - b.discount)
+        } else {
+          sorted.sort((a, b) => b.discount - a.discount)
+        }
+        break
+      case "stock":
+        if (order === "asc") {
+          sorted.sort((a, b) => a.stock - b.stock)
+        } else {
+          sorted.sort((a, b) => b.stock - a.stock)
+        }
+        break
+      case "category":
+        if (order === "asc") {
+          sorted.sort((a, b) => catToString(a.categories).localeCompare(catToString(b.categories)))
+        } else {
+          sorted.sort((a, b) =>  catToString(b.categories).localeCompare(catToString(a.categories)))
+        }
+        break
+      case "available":
+        if (order === "asc") {
+          sorted.sort((a, b) => a.available - b.available)
+        } else {
+          sorted.sort((a, b) => b.available - a.available)
+        }
+        break
+      
+      default:
+        if (order === "asc") {
+          sorted.sort((a, b) => a.id - b.id)
+        } else {
+          sorted.sort((a, b) => b.id - a.id)
+        }
+        break
+    }
+
+    return sorted
+  }
+
   useEffect(() => {
     getItems(
-      (data) => setItems(data),
-      (err) => console.log(err)
+      (data) => {
+        setItems(data)
+        setSearchItems(data)
+      },
+      (err) => errorToast("Error al cargar los productos")
     )
   }, [])
+
+  useEffect(() => {
+      setResultItems(sortResults(searchItems, sortBy, order))
+  }, [searchItems])
+
+  useEffect(() => {
+        setResultItems(sortResults(resultItems, sortBy, order))
+    }, [sortBy, order])
 
   useEffect(() => {
     if (editItem) {
@@ -92,68 +221,88 @@ const ItemsAdmin = () => {
     }
   }, [editItem])
 
-  useEffect(() => {
-    if (deleteItemId) {
-      setShowDeleteModal(true)
-    }
-  }, [deleteItemId])
+  const handleItemSearch = (value) => {
+      setSearchItems(
+          items.filter((item) =>
+              item.name.trim().toLowerCase().includes(value.toLowerCase()),
+          )
+      )
+  }
+
+  const handleSort = (sort, order) => {
+    setSortBy(sort)
+    setOrder(order)
+  }
 
   return (
-    <div className="w-100 h-100 p-3" style={{overflowY: "auto", scrollbarWidth: "none"}}>
-      <div className='d-flex flex-row-reverse gap-3'>
+    <div className="d-flex flex-column w-100 h-100 p-3" style={{overflowY: "auto", scrollbarWidth: "none"}}>
+      <div className='d-flex flex-row-reverse align-items-center justify-content-center mb-2 gap-3'>
         <Button
-          className='mb-2'
+          onClick={handleAdminCategories}
+        >
+          Categorias
+        </Button>
+
+        <Button
           onClick={handleAddItem}
         >
           Agregar
         </Button>
+
+        <ItemSearch className="w-100 my-3" onFindItem={handleItemSearch}/>
       </div>
       
-      <Table className='tabla-items' style={{"--bs-table-bg": "var(--secondary)"}} striped bordered hover>
-        <colgroup>
-          <col className='col-id'/>   
-          <col className='col-title'/>  
-          <col className='col-description'/>  
-          <col className='col-image'/>
-          <col className='col-price'/>  
-          <col className='col-discount'/>
-          <col className='col-stock'/>  
-          <col className='col-categories'/>  
-          <col className='col-available'/>  
-          <col className='col-edit'/> 
-          <col className='col-delete'/> 
-        </colgroup>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Image url</th>
-            <th>Price</th>
-            <th>Discount</th>
-            <th>Stock</th>
-            <th>Categories</th>
-            <th>Available</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
+      <div className='flex-fill rounded-3' style={{backgroundColor: "var(--secondary)", border: "2px solid var(--white)", overflowY: "auto", scrollbarWidth: "none"}}>
+        <Table className='tabla-items m-0' style={{"--bs-table-bg": "transparent", "--bs-table-border-color": "var(--white)", "--bs-table-color": "var(--black)", "--bs-table-striped-color": "var(--black)", "--bs-table-hover-color": "var(--black)"}} striped bordered hover>
+          <thead>
+            <tr>
+              <th>
+                <TableItem title={"ID"} type={"id"} onSort={handleSort}/>
+              </th>
+              <th>
+                <TableItem title={"Nombre"} type={"name"} onSort={handleSort}/>
+              </th>
+              <th>
+                <TableItem title={"Descripcion"} type={"description"} onSort={handleSort}/>
+              </th>
+
+              <th>Imagen</th>
+
+              <th>
+                <TableItem title={"Precio"} type={"price"} onSort={handleSort}/>
+              </th>
+              <th>
+                <TableItem title={"Descuento"} type={"discount"} onSort={handleSort}/>
+              </th>
+              <th>
+                <TableItem title={"Stock"} type={"stock"} onSort={handleSort}/>
+              </th>
+              <th>
+                <TableItem title={"Categorias"} type={"category"} onSort={handleSort}/>
+              </th>
+              <th>
+                <TableItem title={"Disponible"} type={"available"} onSort={handleSort}/>
+              </th>
+              <th>Editar</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {resultItems.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td><span className="title-clamp">{item.name}</span></td>
                 <td><span className="description-clamp">{item.description}</span></td>
-                <td><span className="image-clamp">{item.image}</span></td>
+                <td><Image src={item.image} className='h-100' style={{aspectRatio: "1 / 1"}}/></td>
                 <td>${item.price}</td>
                 <td>{item.discount * 100}%</td>
                 <td>{item.stock}</td>
-                <td>{item.categories.map(c => c.name).join(" - ")}</td>
+                <td>{catToString(item.categories)}</td>
                 <td>{`${item.available}`}</td>
                 <td>
                   <Button 
-                    className="w-100 h-100 border border-0 rounded-0"
-                    style={{backgroundColor: "var(--blue)"}}
+                    className="border border-0 rounded-3"
+                    style={{backgroundColor: "var(--blue)", aspectRatio: "1 / 1"}}
                     onClick={() => handleEditItem(item)}
                   >
                     <PencilSquare size={20}/>
@@ -161,20 +310,21 @@ const ItemsAdmin = () => {
                 </td>
                 <td>
                   <Button
-                    className="w-100 h-100 border border-0 rounded-0"
-                    style={{backgroundColor: "var(--red)"}}
-                    onClick={() => handleDeleteItem(item)}
+                    className="border border-0 rounded-3"
+                    style={{backgroundColor: "var(--red)", aspectRatio: "1 / 1"}}
+                    onClick={() => handleAcceptConfirm(item)}
                   >
                     <Trash size={20}/>  
                   </Button>
                 </td>
               </tr>
-            ))
-          }
-        </tbody>
-      </Table>
+            ))}
+          </tbody>
+        </Table>
+      </div>
+      <CategoriesModal show={showCategoryModal} onClose={handleCloseCategoryModal}/>
       <EditItem item={editItem} show={showEditModal} onClose={handleCloseEditModal} onConfirm={handleConfirmEdit}/>
-      <ConfirmDelete show={showDeleteModal} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDelete} />
+      <Confirm actionTitle={actionModal} message={messageModal} show={showConfirmModal} onClose={handleCloseConfirmModal} onConfirm={handleConfirm} />
     </div>
   );
 }

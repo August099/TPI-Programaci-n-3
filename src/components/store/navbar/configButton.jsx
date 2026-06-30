@@ -1,15 +1,9 @@
 import { useState } from 'react'
 import { ButtonGroup, Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { GearFill, Moon, Translate, BoxArrowRight } from 'react-bootstrap-icons';
-import ToggleTheme from '../services/theme/toggleTheme/Toggletheme';
+import ToggleTheme from '../../services/theme/toggleTheme/Toggletheme.jsx';
 
 const ConfigButton = ({onLogout}) => {
-    const [isDark, setIsDark] = useState(false)
-
-    const handleDark = () => {
-        setIsDark(!isDark)
-    }
-
     const handleLogOut = () => {
         onLogout()
     }

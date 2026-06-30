@@ -1,13 +1,10 @@
 import "./navbar.css"
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Nav, Navbar, Dropdown,  } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import ItemSearch from "../store/itemSearch/itemSearch";
 import ConfigButton from "./configButton";
+import { isAdmin } from "../store.helpers";
 
 function StoreNavbar({onLogout, role}) {
   const navigate = useNavigate();
@@ -46,7 +43,7 @@ function StoreNavbar({onLogout, role}) {
             <Nav.Link
               onClick={() => navigate("/store")}
               style={{
-                color: "#FEE9E1",
+                color: "whitesmoke",
                 cursor: "pointer",
               }}
             >
@@ -56,7 +53,7 @@ function StoreNavbar({onLogout, role}) {
             <Nav.Link
               onClick={() => navigate("/store/products")}
               style={{
-                color: "#FEE9E1",
+                color: "whitesmoke",
                 cursor: "pointer",
               }}
             >
@@ -66,23 +63,34 @@ function StoreNavbar({onLogout, role}) {
             <Nav.Link
               onClick={() => navigate("/store/cart")}
               style={{
-                color: "#FEE9E1",
+                color: "whitesmoke",
                 cursor: "pointer",
               }}
             >
               Carrito
             </Nav.Link>
             
-            { role === "Admin" || role === "Super" &&
-              <Nav.Link
-                onClick={() => navigate(`/store/items-admin`)}
-                style={{
-                  color: "#FEE9E1",
-                  cursor: "pointer",
-                }}
-              >
-                Administrar
-              </Nav.Link>
+            { isAdmin() &&
+              <Dropdown className="d-inline mx-2" autoClose="outside">
+                <Dropdown.Toggle className="bg-transparent border-0">
+                  Administrar
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu style={{backgroundColor: "#222725"}}>
+                  <Dropdown.Item 
+                    onClick={() => navigate('/store/items-admin')}
+                    className="dropdown-item-admin"
+                  >
+                    Productos
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigate('/store/users-admin')}
+                    className="dropdown-item-admin"
+                  >
+                    Usuarios
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             }
           </Nav>
           <Nav>

@@ -1,12 +1,15 @@
-import { Button, Form, Modal, InputGroup } from 'react-bootstrap';
+import { Button, Form, Modal, InputGroup, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { getCategories } from '../../store/store.services.js';
+import { getCategories, addCategory } from '../../store/store.services.js';
+import { errorToast } from '../notifications/notifications.js';
+import { validateItem } from './validations/validations.helpers.js';
 
 const EditItem = ({ item, show, onClose, onConfirm}) => {
 
   const [categoriesList, setCategoriesList] = useState([])
+  const [newCategory, setNewCategory] = useState("")
 
-  const [id, setId] = useState(0)
+  const [id, setId] = useState("")
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [image, setImage] = useState("")
@@ -16,12 +19,13 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
   const [categories, setCategories] = useState([])
   const [available, setAvailable] = useState(false)
 
-  useEffect(() => {
-    getCategories(
-      (data) => setCategoriesList(data),
-      (err) => console.log("Error al obtener las categorias")
-    )
-  }, [])
+  const [nameErrorMessage, setNameErrorMessage] = useState(null);
+  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState(null);
+  const [imageErrorMessage, setImageErrorMessage] = useState(null);
+  const [priceErrorMessage, setPriceErrorMessage] = useState(null);
+  const [discountErrorMessage, setDiscountErrorMessage] = useState(null);
+  const [stockErrorMessage, setStockErrorMessage] = useState(null);
+  const [categoryErrorMessage, setCategoryErrorMessage] = useState(null);
 
   useEffect(() => {
     if (item) {
@@ -33,34 +37,85 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
       setDiscount(item.discount)
       setStock(item.stock)
       setCategories(item.categories.map(c => c.id))
-      setAvailable(item.available) 
-    } else {
-      setId(0)
-      setName("")
-      setDescription("")
-      setImage("")
+      setAvailable(item.available)
+
+      setNewCategory("")
+
+      setNameErrorMessage(null)
+      setDescriptionErrorMessage(null)
+      setImageErrorMessage(null)
+      setPriceErrorMessage(null)
+      setDiscountErrorMessage(null)
+      setStockErrorMessage(null)
+      setCategoryErrorMessage(null)
+    }
+  }, [item])
+
+  useEffect(() => {
+    if (!item) {
+      setId("")
+      setName('')
+      setDescription('')
+      setImage('')
       setPrice(0)
       setDiscount(0)
       setStock(0)
       setCategories([])
-      setAvailable(false) 
+      setAvailable(false)
+
+      setNewCategory("")
+
+      setNameErrorMessage(null)
+      setDescriptionErrorMessage(null)
+      setImageErrorMessage(null)
+      setPriceErrorMessage(null)
+      setDiscountErrorMessage(null)
+      setStockErrorMessage(null)
+      setCategoryErrorMessage(null)
     }
-  }, [item])
+
+    if (show) {
+      getCategories(
+        (data) => setCategoriesList(data),
+        (err) => errorToast("Error al obtener las categorias.")
+      )
+    }
+  }, [ show ])
+
+  const hasErrors = (errors) => {
+    const {name, description, image, price, discount, stock} = errors
+
+    if (name || description || image || price || discount || stock) {
+      setNameErrorMessage(name)
+      setDescriptionErrorMessage(description)
+      setImageErrorMessage(image)
+      setPriceErrorMessage(price)
+      setDiscountErrorMessage(discount)
+      setStockErrorMessage(stock)
+      return true
+    }
+
+    return false
+  }
 
   const handleConfirm = () => {
-    onConfirm(
-      {
-        id,
-        name,
-        description,
-        image,
-        price,
-        discount,
-        stock,
-        categories,
-        available
-      }
-    )
+    const item = {
+      id,
+      name,
+      description,
+      image,
+      price,
+      discount,
+      stock,
+      categories,
+      available
+    }
+
+    const errors = validateItem(item)
+
+    if (hasErrors(errors)) return
+
+    onConfirm(item)
   }
 
   const handleSelectedCategories = (check, category) => {
@@ -69,6 +124,24 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
       } else {
           setCategories(categories.filter((c) => c !== category))
       }
+  }
+
+  const handleAddCategory = () => {
+    if (categoriesList.map(c => c.name).includes(newCategory)) {
+      setCategoryErrorMessage("Categoria existente.")
+      return
+    }
+
+    addCategory(
+      {name: newCategory},
+      (data) => {
+        setCategoriesList((prevCategories) => 
+          [...prevCategories, data]
+        )
+        setNewCategory("")
+      },
+      (err) => errorToast("Error al agregar la categoria.")
+    )
   }
 
   return (
@@ -94,9 +167,11 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
                 type="text"
                 placeholder="Nombre del producto"
                 value={name}
-                onChange={(event) => {setName(event.target.value)}}
+                onChange={(event) => {setName(event.target.value), setNameErrorMessage(null)}}
                 autoFocus
+                className={nameErrorMessage && "border border-danger border-3"}
               />
+              {nameErrorMessage && <Form.Label>{nameErrorMessage}</Form.Label>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -105,8 +180,10 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
                 as="textarea"
                 rows={3}
                 value={description}
-                onChange={(event) => {setDescription(event.target.value)}}
+                onChange={(event) => {setDescription(event.target.value), setDescriptionErrorMessage(null)}}
+                className={descriptionErrorMessage && "border border-danger border-3"}
               />
+              {descriptionErrorMessage && <Form.Label>{descriptionErrorMessage}</Form.Label>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -115,8 +192,10 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
                 type="text"
                 placeholder="URL de la imagen"
                 value={image}
-                onChange={(event) => {setImage(event.target.value)}}
+                onChange={(event) => {setImage(event.target.value), setImageErrorMessage(null)}}
+                className={imageErrorMessage && "border border-danger border-3"}
               />
+              {imageErrorMessage && <Form.Label>{imageErrorMessage}</Form.Label>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -127,10 +206,12 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
                   type="number"
                   placeholder="0"
                   value={price}
-                  onChange={(event) => {setPrice(event.target.value)}}
+                  onChange={(event) => {setPrice(event.target.value), setPriceErrorMessage(null)}}
                   min={0}
+                  className={priceErrorMessage && "border border-danger border-3"}
                 />
               </InputGroup>
+              {priceErrorMessage && <Form.Label>{priceErrorMessage}</Form.Label>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -141,8 +222,10 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
                 max={100}
                 placeholder="0"
                 value={`${discount * 100}`}
-                onChange={(event) => {setDiscount(event.target.value / 100)}}
+                onChange={(event) => {setDiscount(event.target.value / 100), setDiscountErrorMessage(null)}}
+                className={discountErrorMessage && "border border-danger border-3"}
               />
+              {discountErrorMessage && <Form.Label>{discountErrorMessage}</Form.Label>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -151,9 +234,11 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
                 type="number"
                 placeholder="0"
                 value={stock}
-                onChange={(event) => {setStock(event.target.value)}}
+                onChange={(event) => {setStock(event.target.value), setStockErrorMessage(null)}}
                 min={0}
+                className={stockErrorMessage && "border border-danger border-3"}
               />
+              {stockErrorMessage && <Form.Label>{stockErrorMessage}</Form.Label>}
             </Form.Group>
 
             <Form.Group className="mb-3 d-flex gap-3">
@@ -166,17 +251,39 @@ const EditItem = ({ item, show, onClose, onConfirm}) => {
 
             <Form.Group className="mb-3">
               <Form.Label>Categorias</Form.Label>
-              {categoriesList.map((category) => (
-                  <div key={category.id} className="w-100 d-flex justify-content-between mt-1">
-                      <label className="ms-2">{category.name}</label>
-                      <Form.Check
-                          checked={categories.includes(category.id)}
-                          onChange={(event) => {
-                              handleSelectedCategories(event.target.checked, category.id)
-                          }
-                      }/>
-                  </div>
-              ))}
+                
+              <InputGroup className='my-2' style={{height: "30px"}}>
+                <Button
+                  className='h-100 p-0 px-2'
+                  onClick={handleAddCategory}
+                >
+                  Agregar
+                </Button>
+                <Form.Control
+                  type='text'
+                  placeholder='Agregar categoria'
+                  value={newCategory}
+                  onChange={(event) => {setNewCategory(event.target.value), setCategoryErrorMessage(null)}}
+                  className={categoryErrorMessage ? "border border-danger border-3 h-100" : "h-100"}
+                />
+              </InputGroup>
+              {categoryErrorMessage && <Form.Label>{categoryErrorMessage}</Form.Label>}
+
+              <Row>
+                {categoriesList.map((category) => (
+                  <Col xs={6} key={category.id}>
+                    <div className="w-100 d-flex align-items-center justify-content-around mt-1 border">
+                        <label className="ms-2">{category.name}</label>
+                        <Form.Check
+                            checked={categories.includes(category.id)}
+                            onChange={(event) => {
+                                handleSelectedCategories(event.target.checked, category.id)
+                            }
+                        }/>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
             </Form.Group>
           </Form>
         </Modal.Body>

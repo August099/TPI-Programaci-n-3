@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { AutheticationContext } from "./auth.context";
 import { jwtDecode } from "jwt-decode";
+import { errorToast } from "../../ui/notifications/notifications.js"
+
+const baseUrl = import.meta.env.VITE_BASE_URL_SERVER_URL;
 
 const tokenValue = localStorage.getItem("ferreteria-token");
 
@@ -17,16 +20,17 @@ export const AutheticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(decodeToken(tokenValue))
 
   const handleUserLogin = (newToken) => {
-    localStorage.setItem("ferreteria-token", newToken);
-    setToken(newToken);
-    setUser(decodeToken(newToken));
-  };
+    localStorage.setItem("ferreteria-token", newToken)
+    setToken(newToken)
+    setUser(decodeToken(newToken))
+  }
 
   const handleUserLogout = () => {
-    localStorage.removeItem("ferreteria-token", token);
-    setToken(null);
-    setUser(null);
-  };
+    localStorage.removeItem("ferreteria-token", token)
+    setToken(null)
+    setUser(null)
+  }
+
   return (
     <AutheticationContext.Provider
       value={{ token, user, handleUserLogin, handleUserLogout }}

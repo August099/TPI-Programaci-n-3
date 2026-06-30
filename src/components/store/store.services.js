@@ -1,23 +1,5 @@
 const baseUrl = import.meta.env.VITE_BASE_URL_SERVER_URL;
 
-export const getRole = (onSuccess, onError) => {
-    fetch(`${baseUrl}/user/role`, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
-        },
-    })
-    .then((res) => {
-        if (!res.ok) {
-            return res.json().then((err) => {
-                throw new Error(err.message || "Error al obtener el rol");
-            });
-        }
-        return res.json();
-    })
-    .then(onSuccess)
-    .catch(onError);
-}
-
 export const getItems = (onSuccess, onError) => {
     fetch(`${baseUrl}/items`, {
         headers: {
@@ -96,6 +78,27 @@ export const updateItem = (item, onSuccess, onError) => {
     .catch(onError);
 };
 
+export const updateStock = (id, stock, onSuccess, onError) => {
+    fetch(`${baseUrl}/items/stock/${id}`, {
+        headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "PUT",
+        body: JSON.stringify({stock})
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al actualizar el stock");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
+
 export const deleteItem = (itemId, onSuccess, onError) => {
     fetch(`${baseUrl}/items/${itemId}`, {
         headers: {
@@ -150,6 +153,67 @@ export const getItemsByCategories = (categoriesIds, onSuccess, onError) => {
     .then(onSuccess)
     .catch(onError);
 }
+
+export const addCategory = (category, onSuccess, onError) => {
+    fetch(`${baseUrl}/categories`, {
+        headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "POST",
+        body: JSON.stringify(category),
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al crear la categoria");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
+
+export const updateCategory = (category, onSuccess, onError) => {
+    fetch(`${baseUrl}/categories/${category.id}`, {
+        headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(category)
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al actualizar la categoria");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
+
+export const removeCategory = (id, onSuccess, onError) => {
+    fetch(`${baseUrl}/categories/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "DELETE",
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al eliminar la categoria");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
 
 export const getQuestions = (itemId, onSuccess, onError) => {
     fetch(`${baseUrl}/items/${itemId}/questions`, {
@@ -317,7 +381,7 @@ export const removeItemFromCart = (itemId, onSuccess, onError) => {
     .then((res) => {
         if (!res.ok) {
             return res.json().then((err) => {
-                throw new Error(err.message || "Error al eliminar la pregunta");
+                throw new Error(err.message || "Error al eliminar el producto");
             });
         }
         return res.json();
@@ -343,4 +407,81 @@ export const clearCart = (onSuccess, onError) => {
     })
     .then(onSuccess)
     .catch(onError);
-};
+}
+
+export const registerUser = (user, onSuccess, onError) => {
+    fetch(`${baseUrl}/register`, {
+        headers: {
+            "Content-type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(user),
+    })
+    .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+            throw data.errors;
+        }
+        return data;
+    })
+    .then(onSuccess)
+    .catch(onError);
+}
+
+export const getUsers = (onSuccess, onError) => {
+    fetch(`${baseUrl}/users`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al obtener usuarios.");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+}
+
+export const setRole = (user, onSuccess, onError) => {
+    fetch(`${baseUrl}/users/role`, {
+        headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(user)
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al actualizar el rol del usuario");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+}
+
+export const removeUser = (id, onSuccess, onError) => {
+    fetch(`${baseUrl}/users/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("ferreteria-token")}`,
+        },
+        method: "DELETE",
+    })
+    .then((res) => {
+        if (!res.ok) {
+            return res.json().then((err) => {
+                throw new Error(err.message || "Error al eliminar la pregunta");
+            });
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+}

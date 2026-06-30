@@ -46,7 +46,7 @@ export const validateLoginUser = (body) => {
 };
 
 export const validateRegisterUser = (body) => {
-  const { name, email, password, repeatPassword } = body;
+  const { name, email, password, repeatPassword, role } = body;
   const errors = {};
 
   if (!name || !validateString(name, 4, 20)) {
@@ -59,7 +59,10 @@ export const validateRegisterUser = (body) => {
     errors.passwordError = "Contraseña invalida. Debe contener al menos 7 caracteres, una mayuscula y un numero."
   }
   if (!repeatPassword || repeatPassword != password) {
-    errors.repeatPasswordError = "Asegure que las contraseñas sean iguales"
+    errors.repeatPasswordError = "Asegure que las contraseñas sean iguales."
+  }
+  if (role && !["Super", "Admin", "User"].includes(role)) {
+    errors.role = "Error con el rol de usuario."
   }
 
   return errors;

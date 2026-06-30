@@ -64,8 +64,10 @@ const Products = () => {
     useEffect(() => {
         getItems(
             (data) => {
-                setItems(data)
-                setSearchItems(data)
+                const availableItems = data.filter((i) => i.available)
+                
+                setItems(availableItems)
+                setSearchItems(availableItems)
             },
             (err) => console.log(err)
         )
@@ -93,8 +95,8 @@ const Products = () => {
             items.filter((item) =>
                 item.name.trim().toLowerCase().includes(value.toLowerCase()),
             )
-        );
-    };
+        )
+    }
 
     const handleSort = (orderType) => {
         setSortBy(orderType)
@@ -104,7 +106,6 @@ const Products = () => {
         const filtered = 
             searchItems.filter(
                 (item) => {
-                    console.log(item)
                     if (
                         apllyDiscount(item) >= priceRange[0] &&
                         apllyDiscount(item) <= priceRange[1] &&

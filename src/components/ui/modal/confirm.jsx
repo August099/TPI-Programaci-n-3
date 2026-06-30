@@ -1,15 +1,15 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-const ConfirmDelete = ({title, show, onClose, onConfirm }) => {
+const Confirm = ({ actionTitle, message, show, onClose, onConfirm }) => {
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Confirmar acción</Modal.Title>
+        <Modal.Title>{actionTitle}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <p>{title}</p>
+        <p>{message}</p>
       </Modal.Body>
 
       <Modal.Footer>
@@ -17,11 +17,11 @@ const ConfirmDelete = ({title, show, onClose, onConfirm }) => {
           Cancelar
         </Button>
         <Button variant="primary" onClick={onConfirm}>
-          Aceptar
+          Confirmar
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default ConfirmDelete;
+export default Confirm;

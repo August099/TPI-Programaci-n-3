@@ -19,7 +19,7 @@ const QuestionItem = ({question, role, isOwner = false, onAnswer, onDelete}) => 
                 <p className="m-0">Enviado: {formatDate(question.createdAt)}</p>
                 <p className="m-0">Respuesta: {question.answer ? formatDate(question.updatedAt) : "pendiente"}</p>
                 <p className="m-0 fs-6">Usuario: {question.user.name}</p>
-                {(isOwner || isAdmin(role)) && <Button onClick={() => onDelete(question.id, isOwner)}>eliminar</Button>}
+                {(isOwner || isAdmin(role)) && <Button className="p-0 bg-transparent border-0 text-decoration-underline fw-bold" style={{color: "var(--black)"}} onClick={() => onDelete(question.id, isOwner)}>eliminar</Button>}
             </div>
             <div className="w-100">
                 <p className="m-0 fs-5 w-auto">{question.question}</p>

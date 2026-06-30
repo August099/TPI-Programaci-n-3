@@ -1,12 +1,14 @@
+.tabla-items td {
+    height: 70px;
+}
+
 .tabla-items th,
 .tabla-items td {
     text-align: center;
     vertical-align: middle;
-    height: 70px;
-    padding: 0;
 }
 
-.description-clamp, .image-clamp, .title-clamp{
+.description-clamp, .title-clamp{
     
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -40,61 +42,38 @@
     min-width: 3%;
 }
 
-.col-title {
-    width: 10%;
-    max-width: 10%;
-    min-width: 10%;
-}
-
 .col-description {
     width: 23%;
     max-width: 23%;
     min-width: 23%;
 }
 
-.col-image {
+.col-price, .col-categories {
     width: 15%;
     max-width: 15%;
     min-width: 15%;
 }
 
-.col-price {
-    width: 10%;
-    max-width: 10%;
-    min-width: 10%;
+.col-image {
+    width: 5%;
+    max-width: 5%;
+    min-width: 5%;
 }
 
-.col-discount {
+.col-discount, .col-available {
     width: 7%;
     max-width: 7%;
     min-width: 7%;
 }
 
+.col-title {
+    width: 10%;
+    max-width: 10%;
+    min-width: 10%;
+}
+
+.col-edit, .col-delete,
 .col-stock {
-    width: 5%;
-    max-width: 5%;
-    min-width: 5%;
-}
-
-.col-categories {
-    width: 10%;
-    max-width: 10%;
-    min-width: 10%;
-}
-
-.col-available {
-    width: 7%;
-    max-width: 7%;
-    min-width: 7%;
-}
-
-.col-edit {
-    width: 5%;
-    max-width: 5%;
-    min-width: 5%;
-}
-
-.col-delete {
     width: 5%;
     max-width: 5%;
     min-width: 5%;

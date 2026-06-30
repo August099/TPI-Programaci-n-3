@@ -1,16 +1,25 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { getItems } from "../store.services.js";
+import { getCategories, getItems } from "../store.services.js";
 import { useState, useEffect } from "react";
-import CardItem from "../cardItem/cardItem.jsx";
+import { useNavigate } from "react-router";
+import { errorToast } from "../../ui/notifications/notifications.js";
+import ItemsCarousel from "../carrusel/carrusel.jsx"
 
 const Home = () => {
-  const categorias = ["categoria1", "categoria1", "categoria1"]
   const [items, setItems] = useState([])
+  const [categories, setCategories] = useState([])
+
+  const navigate = useNavigate();
 
   useEffect(() => {
       getItems(
-          (data) => setItems(data),
+          (data) => setItems(data.filter(i => i.available)),
           (err) => console.log(err)
+      )
+
+      getCategories(
+        (data) => setCategories(data),
+        (err) => errorToast("Error al obtener las categorias.")
       )
   }, [])
 
@@ -39,6 +48,7 @@ const Home = () => {
               </p>
 
               <Button
+                onClick={() => navigate("/store/products")}
                 style={{
                   backgroundColor: "#5BC3EB",
                   border: "none",
@@ -69,19 +79,19 @@ const Home = () => {
           Categorías
         </h2>
 
-        <Row className="g-3">
-          {categorias.map((categoria, index) => (
+        <Row className="d-flex align-items-center justify-content-center gap-3">
+          {categories.map((category, index) => (
             <Col md={4} lg={2} key={index}>
               <div
                 className="text-center p-4 shadow-sm"
                 style={{
-                  backgroundColor: "#B09E99",
+                  backgroundColor: "var(--secondary)",
                   color: "#222725",
                   borderRadius: "10px",
                   fontWeight: "bold",
                 }}
               >
-                {categoria}
+                {category.name}
               </div>
             </Col>
           ))}
@@ -96,17 +106,7 @@ const Home = () => {
           Productos Destacados
         </h2>
 
-        <Row className="justify-content-center g-4">
-          {items.map((item) => (
-            <Col key={item.id} xs="auto">
-              <CardItem
-                id={item.id}
-                key={item.id}
-                item={item}
-              />
-            </Col>
-          ))}
-        </Row>
+        <ItemsCarousel items={items}/>
       </Container>
 
       <section
@@ -150,17 +150,6 @@ const Home = () => {
           <h2 className="mb-4">
             Hasta 30% OFF en herramientas eléctricas
           </h2>
-
-          <Button
-            style={{
-              backgroundColor: "#06D6A0",
-              border: "none",
-              color: "#222725",
-              fontWeight: "bold",
-            }}
-          >
-            Ver Ofertas
-          </Button>
         </Container>
       </section>
     </div>

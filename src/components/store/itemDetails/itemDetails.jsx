@@ -4,7 +4,6 @@ import {
     addQuestion,
     getQuestions,
     deleteQuestion,
-    getRole,
     addAnswer,
     addItemToCart
 } from "../store.services";
@@ -12,7 +11,7 @@ import { Container, Row, Col, Image, Button, FormControl } from "react-bootstrap
 import { Star, StarFill } from "react-bootstrap-icons";
 import { useEffect, useState, useContext } from "react";
 import { AutheticationContext } from "../../services/auth/auth.context.jsx";
-import { errorToast } from "../../ui/notifications/notifications";
+import { errorToast, successToast } from "../../ui/notifications/notifications";
 import { apllyDiscount } from "../store.helpers.js";
 import QuestionItem from "./questionItem.jsx";
 import ConfirmDelete from "../../ui/modal/delete.jsx";
@@ -38,7 +37,6 @@ const ItemDetails = () => {
     const [stock, setStock] = useState(0)
     const [quantity, setQuantity] = useState(1)
     const [question, setQuestion] = useState("")
-    const [role, setRole] = useState("User")
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [questionDelete, setquestionDelete] = useState(null)
@@ -48,7 +46,7 @@ const ItemDetails = () => {
             id,
             (data) => {
                 setItem(data)
-                setStock(data.stock)
+                setStock(data.stock - 1)
             },
             (err) => console.log(err)
         )
@@ -56,15 +54,11 @@ const ItemDetails = () => {
         getQuestions(
             id,
             (data) => {
+                console.log(user.id, data)
                 setQuestions(data.filter(q => q.userId !== user.id))
                 setUserQuestions(data.filter(q => q.userId === user.id))
             },
             (err) => console.log("Error al cargar las preguntas")
-        )
-
-        getRole(
-            (data) => setRole(data),
-            (err) => console.log("Error al obtener el rol")
         )
     }, [id]);
 
@@ -146,8 +140,8 @@ const ItemDetails = () => {
         console.log(item)
         addItemToCart(
           {itemId: item.id, quantity},
-          (data) => console.log(data),
-          (err) => console.log("Error al introducir al carrito")
+          (data) => successToast("Producto agregado al carrito."),
+          (err) => errorToast("Error al agregar al carrito")
         )
       }
 
@@ -159,7 +153,7 @@ const ItemDetails = () => {
 
     return (
         <>
-            <div className="w-100 h-100 p-4 d-flex flex-column" style={{overflowY:"auto", scrollbarWidth:"none"}}>
+            <div className="w-100 h-100 p-4 d-flex flex-column" style={{overflowY:"auto", scrollbarWidth:"none", color: "var(--black)"}}>
                 <section className="w-100 d-flex gap-3" style={{height:"80%", minHeight:"80%"}}>
                     <div className="h-100 d-flex justify-content-center align-items-center" style={{width:"55%"}}>
                         <Image src={item.image} 
@@ -257,7 +251,7 @@ const ItemDetails = () => {
                                         <QuestionItem
                                             key={q.id}
                                             question={q}
-                                            role={role}
+                                            role={user.role}
                                             isOwner={true}
                                             onAnswer={handleAnswer}
                                             onDelete={handleDelete}
@@ -270,7 +264,7 @@ const ItemDetails = () => {
                             <div
                                 className="d-flex flex-column gap-1 mt-2"
                             >
-                                <h5>Tus preguntas</h5>
+                                <h5>Preguntas de usuarios</h5>
                                 <div
                                     className="d-flex flex-column gap-3"
                                     style={{maxHeight: "370px", overflowY: "auto", scrollbarWidth: "none"}}
@@ -279,7 +273,7 @@ const ItemDetails = () => {
                                         <QuestionItem 
                                             key={q.id}
                                             question={q}
-                                            role={role}
+                                            role={user.role}
                                             onAnswer={handleAnswer}
                                             onDelete={handleDelete}
                                         />
@@ -289,7 +283,7 @@ const ItemDetails = () => {
                         }
                     </div>
                 </section>
-                <ConfirmDelete show={showDeleteModal} onConfirm={handleConfirmDelete} onClose={handleCloseDeleteModal}/>
+                <ConfirmDelete title={"¿Estas seguro que queres eliminar la pregunta?"} show={showDeleteModal} onConfirm={handleConfirmDelete} onClose={handleCloseDeleteModal}/>
             </div>
         </>
     );

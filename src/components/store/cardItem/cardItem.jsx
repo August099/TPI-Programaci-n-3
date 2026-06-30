@@ -2,6 +2,7 @@ import { Button, Card } from "react-bootstrap";
 import { apllyDiscount } from "../store.helpers.js";
 import { useNavigate } from "react-router";
 import { addItemToCart } from "../store.services.js";
+import { errorToast, successToast } from "../../ui/notifications/notifications.js";
 
 const CardItem = ({ item }) => {
   const navigate = useNavigate()
@@ -9,21 +10,17 @@ const CardItem = ({ item }) => {
   const handleAddToCart = () => {
     addItemToCart(
       {itemId: item.id, quantity: 1},
-      (data) => console.log(data),
-      (err) => console.log("Error al introducir al carrito")
+      (data) => successToast("Producto agregado al carrito."),
+      (err) => errorToast("Error al agregar el producto.")
     )
   }
 
   return (
     <Card
+      className="w-100 border-0 rounded-3"
       style={{
-        width: "100%",
-        maxWidth: "260px",
         backgroundColor: "var(--secondary)",
-        color: "var(--black)",
-        border: "none",
-        borderRadius: "10px",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+        color: "var(--black)"
       }}
     >
       <Card.Img
@@ -41,7 +38,7 @@ const CardItem = ({ item }) => {
       />
 
       <Card.Body className="d-flex flex-column">
-        <Card.Title className="title-clamp m-0 mb-1" style={{minHeight: "48px", maxHeight: "48px"}}>{item.name}</Card.Title>
+        <Card.Title className="m-0 mb-1">{item.name}</Card.Title>
 
         <Card.Text className="description-clamp" style={{minHeight: "48px", maxHeight: "48px"}}>{item.description}</Card.Text>
 

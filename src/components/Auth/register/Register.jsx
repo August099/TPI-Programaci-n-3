@@ -92,7 +92,7 @@ const Register = () => {
             <Form.Label className='fw-bold' onChange={(e) => setName(e.target.value)} value={name}>User name</Form.Label>
             <Form.Control
               type="text"
-              placeholder="User name"
+              placeholder="Nombre de usuario"
               onChange={handleNameChange}
               value={name}
               className={nameErrorMessage && "border border-danger border-3"}
@@ -106,7 +106,7 @@ const Register = () => {
               type="text"
               autoComplete="email"
               inputMode="email"
-              placeholder="Enter email"
+              placeholder="Correo electronico"
               onChange={handleEmailChange}
               value={email}
               className={emailErrorMessage && "border border-danger border-3"}
@@ -118,7 +118,7 @@ const Register = () => {
             <Form.Label className='fw-bold' onChange={(e) => setPassword(e.target.value)} value={password}>Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Password"
+              placeholder="Contraseña"
               onChange={handlePasswordChange}
               value={password}
               className={passwordErrorMessage && "border border-danger border-3"}
@@ -130,7 +130,7 @@ const Register = () => {
             <Form.Label className='fw-bold' onChange={(e) => setRepeatPassword(e.target.value)} value={repeatPassword}>Repeat password</Form.Label>
             <Form.Control 
               type="password"
-              placeholder="Repeat password"
+              placeholder="Confirmar contraseña"
               onChange={handleRepeatPasswordChange}
               value={repeatPassword}
               className={repeatPasswordErrorMessage && "border border-danger border-3"}

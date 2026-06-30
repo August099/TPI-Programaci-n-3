@@ -7,6 +7,7 @@
     --blue: #0d6efd;
     --green: #06D6A0;
     --red: #D91E36;
+    --modal: #222725;
 }
 
 [data-bs-theme="dark"] {
@@ -17,4 +18,12 @@
     --blue: #0d6efd;
     --green: #06D6A0;
     --red: #D91E36;
+    --modal: #f5f5f5;
+}
+
+.card-title {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
